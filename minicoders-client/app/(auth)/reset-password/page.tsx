@@ -1,3 +1,4 @@
+import { ResetPasswordForm } from "@/components/form/reset-pass-form";
 import { Suspense } from "react";
 
 
