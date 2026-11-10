@@ -1,5 +1,3 @@
-import { revalidateTag } from "next/cache";
-
 export const logout = async () => {
   try {
     const response = await fetch(
@@ -15,7 +13,6 @@ export const logout = async () => {
       throw new Error("Logout failed");
     }
 
-    revalidateTag("my-profile", "max");
   } catch (error) {
     console.error("Logout error:", error);
     throw error;
