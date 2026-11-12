@@ -6,10 +6,6 @@ import { Role } from "../../../prisma/generated/prisma/enums";
 import { auth } from "../../middleware/checkAuth";
 
 
-
-
-
-
 const router = Router();
 
 router.post("/register",validateRequest(UserValidation .UserRegistrationZodSchema),AuthController.registerUser,);

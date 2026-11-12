@@ -20,10 +20,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import type { z } from "zod";
+import {  UserRegistrationZodSchema } from "@/lib/validation";
 import { registerUser } from "@/services/register";
-import { UserRegistrationZodSchema } from "@/lib/validation";
 import { GoogleAuthButton } from "../shared/google-btn";
-
 
 type RegisterFormValues = z.infer<typeof UserRegistrationZodSchema>;
 

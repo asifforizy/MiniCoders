@@ -6,7 +6,7 @@ import { prisma } from "../lib/prisma";
 import { AppError } from "../utils/AppError";
 import { catchAsync } from "../utils/catchAsync";
 import { jwtUtils } from "../utils/jwt";
-import { Role } from "../../prisma/generated/prisma/client";
+import { Role } from "../../prisma/generated/prisma/enums";
 
 
 export interface RequestUser {
