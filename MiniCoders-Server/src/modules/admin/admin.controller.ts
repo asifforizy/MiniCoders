@@ -44,9 +44,25 @@ const getAllProblems = catchAsync(async (req: Request, res: Response) => {
 });
 
 
+const createProblem = catchAsync(async (req: Request, res: Response) => {
+  const authorId = req.user!.id; 
+
+  const result = await adminService.createProblemIntoDB(authorId, req.body);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.CREATED,
+    message: "Problem created successfully",
+    data: result,
+  });
+});
+
+
+
 
 export const adminController = {
     getAllUsers,
     updateUserStatus,
+    createProblem,
     getAllProblems
 }
