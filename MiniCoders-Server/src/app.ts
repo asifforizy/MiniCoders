@@ -5,6 +5,7 @@ import { notFound } from "./middleware/notFound";
 import config from "./config";
 import { globalErrorHandler } from "./middleware/globalErrorHandler";
 import { AuthRoutes } from "./modules/auth/auth.routes";
+import { adminRoutes } from "./modules/admin/admin.route";
 
 
 
@@ -23,6 +24,7 @@ app.use(
 
 
 app.use("/api/v1/auth", AuthRoutes);
+app.use("/api/v1/admin", adminRoutes);
 
 
 app.get("/", async (req: Request, res: Response) => {
