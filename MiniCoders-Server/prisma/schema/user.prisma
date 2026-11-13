@@ -15,8 +15,10 @@ model User {
   deletedAt          DateTime?
   createdAt          DateTime     @default(now())
   updatedAt          DateTime     @updatedAt
-  kids              Kids?
-
+  kids               Kids?
+  admin              Admin?
+  problems           Problem[]    @relation("ProblemAuthor")
+  submissions        Submission[]
 
   @@unique([email])
   @@map("users")

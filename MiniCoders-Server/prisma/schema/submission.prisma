@@ -1,0 +1,25 @@
+model Submission {
+  id        String           @id @default(uuid())
+  code      String           @db.Text
+  language  String          
+
+  judge0Token   String?      @unique
+  status        SubmissionStatus @default(PENDING)
+  stdout        String?     
+  stderr        String?     
+  compileOutput String?     
+  time          Float?    
+  memory        Float?      
+  message       String?      @db.Text 
+  
+  score     Int?    
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt 
+  userId    String
+  user      User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  problemId String
+  problem   Problem @relation(fields: [problemId], references: [id])
+
+  @@index([userId, problemId])
+  @@index([judge0Token]) // Crucial for fast polling lookups
+}

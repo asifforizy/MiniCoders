@@ -1,0 +1,17 @@
+model Problem {
+    id          String     @id @default(uuid())
+    authorId    String
+    author      User       @relation("ProblemAuthor", fields: [authorId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+    title       String
+    slug        String     @unique 
+    description String     @db.Text
+    difficulty  Difficulty
+    points      Int        @default(100)
+    createdAt   DateTime   @default(now())
+    updatedAt   DateTime   @updatedAt
+
+    submissions Submission[]
+
+    @@index([difficulty])
+    @@index([authorId])
+}

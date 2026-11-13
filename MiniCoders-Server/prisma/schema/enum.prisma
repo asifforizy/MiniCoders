@@ -14,3 +14,23 @@ enum UserStatus {
   BLOCKED
   DELETED
 }
+
+
+enum Difficulty {
+  EASY
+  MEDIUM
+  HARD
+  EXPERT
+}
+
+enum SubmissionStatus {
+  PENDING      
+  QUEUED           
+  PROCESSING        
+  ACCEPTED         
+  WRONG_ANSWER      
+  TIME_LIMIT_EXCEEDED 
+  COMPILATION_ERROR
+  RUNTIME_ERROR     
+  INTERNAL_ERROR  
+}
