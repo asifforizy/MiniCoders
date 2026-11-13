@@ -11,7 +11,7 @@ const router = express.Router();
 
 router.get("/users", auth(Role.ADMIN, Role.SUPER_ADMIN), adminController.getAllUsers);
 router.patch("/users/:id", auth(Role.ADMIN, Role.SUPER_ADMIN), adminController.updateUserStatus);
-
+router.get("/problems", auth(Role.ADMIN, Role.SUPER_ADMIN), adminController.getAllProblems);
 
 
 export const adminRoutes = router;

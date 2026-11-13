@@ -32,6 +32,22 @@ const updateUserStatusIntoDB = async (id: string, payload: IUpdatedStatus) => {
   return updatedUser;
 };
 
+const getAllProblemsFromDB = async () => {
+  const allProblems = await prisma.problem.findMany({
+    include: {
+      author: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+        },
+      },
+    },
+    orderBy: { createdAt: "desc" },
+  });
+
+  return allProblems;
+};
 
 
 
@@ -40,4 +56,5 @@ const updateUserStatusIntoDB = async (id: string, payload: IUpdatedStatus) => {
 export const adminService = {
   getAllUsersFromDB,
   updateUserStatusIntoDB,
+  getAllProblemsFromDB,
 };
