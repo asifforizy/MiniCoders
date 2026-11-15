@@ -44,14 +44,14 @@ MiniCoders/
 └── README.md
 ```
 
-## 🎯 Project Goals
+##  Project Goals
 
 - Make programming education accessible and enjoyable for kids.
 - Develop problem-solving and computational thinking skills.
 - Encourage learning through gamification and friendly competition.
 - Provide personalized learning assistance using AI.
 
-## 🚀 Future Improvements
+##  Future Improvements
 
 - Personalized learning paths.
 - AI-powered coding tutor.
@@ -59,7 +59,7 @@ MiniCoders/
 - Leaderboards and achievement systems.
 - Advanced coding challenges and competitions.
 
-## 👨‍💻 Development
+##  Development
 
 MiniCoders is built using a modern full-stack JavaScript and TypeScript ecosystem, combining Next.js, Express.js, PostgreSQL, and Prisma ORM.
 
