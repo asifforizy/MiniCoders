@@ -194,11 +194,16 @@ const resetPassword = catchAsync(async (req: Request, res: Response) => {
 
 
 const logout = catchAsync(async (req: Request, res: Response) => {
-  
-  res.clearCookie("accessToken");
-  res.clearCookie("refreshToken");
+  const options = {
+    httpOnly: true,
+    secure: false,
+    sameSite: "lax" as const,
+    path: "/",
+  };
 
-  
+  res.clearCookie("accessToken", options);
+  res.clearCookie("refreshToken", options);
+
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -206,8 +211,6 @@ const logout = catchAsync(async (req: Request, res: Response) => {
     data: null,
   });
 });
-
-
 
 
 

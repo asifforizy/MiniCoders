@@ -16,5 +16,6 @@ router.patch("/users/:id", auth(Role.ADMIN, Role.SUPER_ADMIN), adminController.u
 router.get("/problems", auth(Role.ADMIN, Role.SUPER_ADMIN), adminController.getAllProblems);
 router.post("/problems", auth(Role.ADMIN, Role.SUPER_ADMIN),  validateRequest(problemValidation.createProblem),adminController.createProblem);
 router.delete("/problems/:id", auth(Role.ADMIN, Role.SUPER_ADMIN), adminController.deleteProblem);
+router.patch("/users/:id/make-admin", auth(Role.SUPER_ADMIN), adminController.makeAdmin);
 
 export const adminRoutes = router;

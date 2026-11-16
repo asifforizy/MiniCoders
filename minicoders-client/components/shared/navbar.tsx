@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-import { Settings, LogOut, UserCircle } from 'lucide-react'
+import { Settings, LogOut, UserCircle, LayoutDashboard } from 'lucide-react'
 import { toast } from 'sonner'
 
 import {
@@ -15,7 +15,6 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Button } from '@/components/ui/button'
 import { logout } from '@/services/logout'
-
 
 const navItems = [
     { label: 'Home', href: '/' },
@@ -29,6 +28,14 @@ const userMenuItems = [
     { label: 'Settings', href: '/settings', icon: Settings },
 ]
 
+// Shown only to ADMIN and SUPER_ADMIN. Change the href to your real route.
+const adminMenuItem = {
+    label: 'Dashboard',
+    href: '/admin/dashboard',
+    icon: LayoutDashboard,
+}
+
+
 export type AppUser = {
     id: string
     name: string
@@ -37,7 +44,7 @@ export type AppUser = {
     googleId?: string | null
     authProvider: 'CREDENTIAL' | 'GOOGLE'
     emailVerified: boolean
-    role: 'USER' | 'ADMIN' | 'SUPER_ADMIN'
+    role: 'KIDS' | 'ADMIN' | 'SUPER_ADMIN'
     status: 'ACTIVE' | 'BLOCKED' | 'DELETED'
     needPasswordChange: boolean
     imageUrl: string
@@ -57,10 +64,16 @@ export type IUserResponse = {
 type NavbarProps = {
     user: IUserResponse
 }
-
 export function Navbar({ user }: NavbarProps) {
     const router = useRouter()
     const currentUser = user?.data
+
+    const isAdmin =
+        currentUser?.role === 'ADMIN' || currentUser?.role === 'SUPER_ADMIN'
+
+    const menuItems = isAdmin
+        ? [adminMenuItem, ...userMenuItems]
+        : userMenuItems
 
     const handleLogout = async () => {
         try {
@@ -107,9 +120,8 @@ export function Navbar({ user }: NavbarProps) {
                     </div>
 
                     <div className="flex-1 flex justify-end">
-                        {user.success && currentUser ? (
+                        {user?.success && currentUser ? (
                             <DropdownMenu>
-                                {/* ✅ Base UI: use `render` instead of `asChild` */}
                                 <DropdownMenuTrigger
                                     render={
                                         <button
@@ -144,18 +156,11 @@ export function Navbar({ user }: NavbarProps) {
                                         <p className="text-xs text-muted-foreground truncate">
                                             {currentUser.email}
                                         </p>
-                                        {currentUser.role !== 'USER' && (
-                                            <span className="mt-1 inline-block rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-primary">
-                                                {currentUser.role}
-                                            </span>
-                                        )}
                                     </div>
 
                                     <DropdownMenuSeparator />
 
-                                    {/* ✅ Base UI: DropdownMenuItem has no `render`/`asChild`.
-                                        Use onClick + router.push for navigation. */}
-                                    {userMenuItems.map((item) => {
+                                    {menuItems.map((item) => {
                                         const Icon = item.icon
                                         return (
                                             <DropdownMenuItem
