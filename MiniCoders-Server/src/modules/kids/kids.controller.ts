@@ -5,19 +5,6 @@ import { sendResponse } from "../../utils/sendResponse";
 import { AppError } from "../../utils/AppError";
 import { kidsService } from "./kids.service";
 
-const getAllProblems = catchAsync(async (req: Request, res: Response) => {
-  const result = await kidsService.getAllProblemsFromDB({
-    difficulty: req.query.difficulty as string | undefined,
-    search: req.query.search as string | undefined,
-  });
-
-  sendResponse(res, {
-    success: true,
-    statusCode: httpStatus.OK,
-    message: "Problems fetched successfully",
-    data: result,
-  });
-});
 
 const getMyProfile = catchAsync(async (req: Request, res: Response) => {
   if (!req.user) {
@@ -35,6 +22,5 @@ const getMyProfile = catchAsync(async (req: Request, res: Response) => {
 });
 
 export const kidsController = {
-  getAllProblems,
   getMyProfile,
 };

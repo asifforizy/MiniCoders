@@ -6,7 +6,6 @@ import { kidsController } from "./kids.controller";
 
 const router = express.Router();
 
-router.get("/problems", auth(Role.KIDS), kidsController.getAllProblems);
 router.get("/profile", auth(Role.KIDS), kidsController.getMyProfile);
 
 export const kidsRoutes = router;
