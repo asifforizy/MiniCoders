@@ -45,7 +45,7 @@ const getAllProblems = catchAsync(async (req: Request, res: Response) => {
 
 
 const createProblem = catchAsync(async (req: Request, res: Response) => {
-  const authorId = req.user!.id; 
+  const authorId = req.user!.userId; 
 
   const result = await adminService.createProblemIntoDB(authorId, req.body);
 
@@ -57,12 +57,22 @@ const createProblem = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const deleteProblem = catchAsync(async (req: Request, res: Response) => {
+  const result = await adminService.deleteProblemFromDB(req.params.id as string);
 
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "Problem deleted successfully",
+    data: result,
+  });
+});
 
 
 export const adminController = {
     getAllUsers,
     updateUserStatus,
     createProblem,
-    getAllProblems
+    getAllProblems,
+    deleteProblem,
 }

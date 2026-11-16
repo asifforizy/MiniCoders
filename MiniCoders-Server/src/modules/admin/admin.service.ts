@@ -95,11 +95,26 @@ const createProblemIntoDB = async (
   return problem;
 };
 
+const deleteProblemFromDB = async (problemId: string) => {
+  const problem = await prisma.problem.findUnique({
+    where: { id: problemId },
+  });
 
+  if (!problem) {
+    throw new AppError(httpStatus.NOT_FOUND, "Problem not found");
+  }
+
+  const deletedProblem = await prisma.problem.delete({
+    where: { id: problemId },
+  });
+
+  return deletedProblem;
+};
 
 export const adminService = {
   getAllUsersFromDB,
   updateUserStatusIntoDB,
   getAllProblemsFromDB,
   createProblemIntoDB,
+  deleteProblemFromDB,
 };
