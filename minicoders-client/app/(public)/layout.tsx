@@ -3,6 +3,7 @@ import { Navbar } from '@/components/shared/navbar'
 import React from 'react'
 import { getMe } from '@/services/getme'
 import { GoogleProvider } from '@/provider/google-provider'
+import { Footer } from '@/components/shared/footer'
 
 async function NavbarWithUser() {
   const user = await getMe()
@@ -16,6 +17,7 @@ const PublicLayout = ({ children }: { children: React.ReactNode }) => {
         <NavbarWithUser />
       </Suspense>
       <GoogleProvider>{children}</GoogleProvider>
+      <Footer></Footer>
     </div>
   )
 }

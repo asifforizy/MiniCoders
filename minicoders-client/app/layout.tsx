@@ -29,7 +29,6 @@ export default  function RootLayout({
         <GoogleProvider>
           {children}
         </GoogleProvider>
-
         <Toaster  richColors position="top-right" />
       </body>
     </html>

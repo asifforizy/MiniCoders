@@ -18,8 +18,11 @@ import { logout } from '@/services/logout'
 
 const navItems = [
     { label: 'Home', href: '/' },
-    { label: 'About', href: '/about' },
+    { label: 'Games', href: '/games' },
+    { label: 'Problems', href: '/problems' },
+    { label: 'Contest', href: '/contest' },
     { label: 'Services', href: '/services' },
+    { label: 'About', href: '/about' },
     { label: 'Contact', href: '/contact' },
 ]
 
