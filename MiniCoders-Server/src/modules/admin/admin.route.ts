@@ -11,11 +11,11 @@ const router = express.Router();
 
 
 
-router.get("/users", auth(Role.ADMIN, Role.SUPER_ADMIN), adminController.getAllUsers);
-router.patch("/users/:id", auth(Role.ADMIN, Role.SUPER_ADMIN), adminController.updateUserStatus);
-router.get("/problems", auth(Role.ADMIN, Role.SUPER_ADMIN), adminController.getAllProblems);
-router.post("/problems", auth(Role.ADMIN, Role.SUPER_ADMIN),  validateRequest(problemValidation.createProblem),adminController.createProblem);
-router.delete("/problems/:id", auth(Role.ADMIN, Role.SUPER_ADMIN), adminController.deleteProblem);
-router.patch("/users/:id/make-admin", auth(Role.SUPER_ADMIN), adminController.makeAdmin);
+router.get("/users", auth(Role.ADMIN), adminController.getAllUsers);
+router.patch("/users/:id", auth(Role.ADMIN), adminController.updateUserStatus);
+router.get("/problems", auth(Role.ADMIN), adminController.getAllProblems);
+router.post("/problems", auth(Role.ADMIN),  validateRequest(problemValidation.createProblem),adminController.createProblem);
+router.delete("/problems/:id", auth(Role.ADMIN), adminController.deleteProblem);
+
 
 export const adminRoutes = router;

@@ -25,6 +25,9 @@ app.use(
 
 app.use("/api/v1/auth", AuthRoutes);
 app.use("/api/v1/admin", adminRoutes);
+app.use("/api/v1/super-admin", adminRoutes);
+
+
 
 
 app.get("/", async (req: Request, res: Response) => {

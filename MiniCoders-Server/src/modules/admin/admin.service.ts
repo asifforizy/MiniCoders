@@ -113,52 +113,6 @@ const deleteProblemFromDB = async (problemId: string) => {
 };
 
 
-const makeAdminIntoDB = async (userId: string) => {
-  const user = await prisma.user.findUnique({
-    where: { id: userId },
-  });
-
-  if (!user) {
-    throw new AppError(httpStatus.NOT_FOUND, "User not found");
-  }
-
-  if (user.role === Role.SUPER_ADMIN) {
-    throw new AppError(httpStatus.BAD_REQUEST, "Super admin role cannot be changed");
-  }
-
-  if (user.role === Role.ADMIN) {
-    throw new AppError(httpStatus.CONFLICT, "This user is already an admin");
-  }
-
-  if (user.status === "BLOCKED") {
-    throw new AppError(httpStatus.FORBIDDEN, "Cannot make a blocked user an admin");
-  }
-
-  const admin = await prisma.$transaction(async (tx) => {
-    await tx.user.update({
-      where: { id: user.id },
-      data: { role: Role.ADMIN },
-    });
-
-    // upsert, so a previously removed admin (isDeleted: true) gets restored
-    return tx.admin.upsert({
-      where: { adminId: user.id },
-      create: {
-        adminId: user.id,
-        name: user.name,
-        email: user.email,
-      },
-      update: {
-        isDeleted: false,
-        deletedAt: null,
-      },
-    });
-  });
-
-  return admin;
-};
-
-
 
 
 export const adminService = {
@@ -167,5 +121,4 @@ export const adminService = {
   getAllProblemsFromDB,
   createProblemIntoDB,
   deleteProblemFromDB,
-  makeAdminIntoDB,
 };

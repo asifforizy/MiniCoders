@@ -69,23 +69,10 @@ const deleteProblem = catchAsync(async (req: Request, res: Response) => {
 });
 
 
-
-const makeAdmin = catchAsync(async (req: Request, res: Response) => {
-  const result = await adminService.makeAdminIntoDB(req.params.id as string);
-
-  sendResponse(res, {
-    success: true,
-    statusCode: httpStatus.OK,
-    message: "User promoted to admin successfully",
-    data: result,
-  });
-});
-
 export const adminController = {
     getAllUsers,
     updateUserStatus,
     createProblem,
     getAllProblems,
     deleteProblem,
-    makeAdmin,
 }

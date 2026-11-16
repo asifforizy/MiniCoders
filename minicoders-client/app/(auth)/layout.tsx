@@ -1,10 +1,9 @@
 import { Suspense } from 'react'
 import { Navbar } from '@/components/shared/navbar'
-
-
 import React from 'react'
 import { getMe } from '@/services/getme'
 import { GoogleProvider } from '@/provider/google-provider'
+
 
 async function NavbarWithUser() {
   const user = await getMe()
