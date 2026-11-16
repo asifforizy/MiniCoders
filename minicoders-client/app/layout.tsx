@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "sonner";
 import { GoogleProvider } from "@/provider/google-provider";
+import { ThemeProvider } from "@/components/shared/themeProvider";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -16,7 +17,7 @@ export const metadata: Metadata = {
   description: "Learn coding with Mini Coders",
 };
 
-export default  function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -25,11 +26,20 @@ export default  function RootLayout({
 
   return (
     <html lang="en" suppressHydrationWarning>
-       <body className={`${inter.variable} font-sans antialiased`}>
-        <GoogleProvider>
-          {children}
-        </GoogleProvider>
-        <Toaster  richColors position="top-right" />
+      <body className={`${inter.variable} font-sans antialiased`}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <GoogleProvider>
+            {children}
+          </GoogleProvider>
+          <Toaster richColors position="top-right" />
+
+        </ThemeProvider>
+
       </body>
     </html>
   );

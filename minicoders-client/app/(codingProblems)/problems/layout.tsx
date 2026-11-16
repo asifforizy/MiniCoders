@@ -18,6 +18,7 @@ const PublicLayout = ({ children }: { children: React.ReactNode }) => {
       </Suspense>
       <GoogleProvider>{children}</GoogleProvider>
       <Footer></Footer>
+      
     </div>
   )
 }
