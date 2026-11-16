@@ -33,18 +33,6 @@ const updateUserStatus = catchAsync(async (req: Request, res: Response) => {
 
 
 
-const getAllProblems = catchAsync(async (req: Request, res: Response) => {
-  const result = await superAdminService.getAllProblemsFromDB();
-
-  sendResponse(res, {
-    success: true,
-    statusCode: httpStatus.OK,
-    message: "ALL Problems retrieved successfully",
-    data: result,
-  });
-});
-
-
 const createProblem = catchAsync(async (req: Request, res: Response) => {
   const authorId = req.user!.userId; 
 
@@ -86,7 +74,6 @@ export const superAdminController = {
     getAllUsers,
     updateUserStatus,
     createProblem,
-    getAllProblems,
     deleteProblem,
     makeAdmin,
 }

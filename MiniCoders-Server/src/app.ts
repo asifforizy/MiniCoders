@@ -7,6 +7,8 @@ import { globalErrorHandler } from "./middleware/globalErrorHandler";
 import { AuthRoutes } from "./modules/auth/auth.routes";
 import { adminRoutes } from "./modules/admin/admin.route";
 import { kidsRoutes } from "./modules/kids/kids.routes";
+import { problemsRoutes } from "./modules/problems/problems.route";
+import { superAdminRoutes } from "./modules/super-admin/super-admin.route";
 
 
 
@@ -26,9 +28,9 @@ app.use(
 
 app.use("/api/v1/auth", AuthRoutes);
 app.use("/api/v1/admin", adminRoutes);
-app.use("/api/v1/super-admin", adminRoutes);
+app.use("/api/v1/super-admin", superAdminRoutes);
 app.use("/api/v1/kids", kidsRoutes);
-app.use("/api/v1/problems", );
+app.use("/api/v1/problems", problemsRoutes); 
 
 
 

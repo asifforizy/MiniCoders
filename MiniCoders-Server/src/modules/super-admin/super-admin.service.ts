@@ -36,22 +36,6 @@ const updateUserStatusIntoDB = async (id: string, payload: IUpdatedStatus) => {
   return updatedUser;
 };
 
-const getAllProblemsFromDB = async () => {
-  const allProblems = await prisma.problem.findMany({
-    include: {
-      author: {
-        select: {
-          id: true,
-          name: true,
-          email: true,
-        },
-      },
-    },
-    orderBy: { createdAt: "desc" },
-  });
-
-  return allProblems;
-};
 
 
 const generateUniqueSlug = async (title: string): Promise<string> => {
@@ -165,7 +149,6 @@ const makeAdminIntoDB = async (userId: string) => {
 export const superAdminService = {
   getAllUsersFromDB,
   updateUserStatusIntoDB,
-  getAllProblemsFromDB,
   createProblemIntoDB,
   deleteProblemFromDB,
   makeAdminIntoDB,

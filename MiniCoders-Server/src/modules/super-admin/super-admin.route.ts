@@ -15,9 +15,8 @@ const router = express.Router();
 
 router.get("/users", auth(Role.SUPER_ADMIN), superAdminController.getAllUsers);
 router.patch("/users/:id", auth(Role.SUPER_ADMIN), superAdminController.updateUserStatus);
-router.get("/problems", auth(Role.SUPER_ADMIN), superAdminController.getAllProblems);
 router.post("/problems", auth(Role.SUPER_ADMIN),  validateRequest(problemValidation.createProblem),superAdminController.createProblem);
 router.delete("/problems/:id", auth(Role.SUPER_ADMIN), superAdminController.deleteProblem);
 router.patch("/users/:id/make-admin", auth(Role.SUPER_ADMIN), superAdminController.makeAdmin);
 
-export const adminRoutes = router;
+export const superAdminRoutes = router;
