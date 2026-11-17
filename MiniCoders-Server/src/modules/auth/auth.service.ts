@@ -173,7 +173,7 @@ const verifyKidsEmail = async (payload: IVerifyEmailPayload) => {
 
   const tempatePath = path.join(
     process.cwd(),
-    "/src/templates/kids-welcome-email.ejs"
+    "/src/templates/user-welcome-email.ejs"
   );
 
   const templateData = {
@@ -390,86 +390,86 @@ const googleLogin = async (payload: IGoogleLoginPayload) => {
     );
   }
 
-  const ifKidsExistWithGoogleAuth = await prisma.user.findUnique({
-    where: {
-      email: googleIdTokenPayload.email,
-      role: Role.KIDS,
-      googleId: googleIdTokenPayload.sub,
-    },
+  if (!googleIdTokenPayload.sub) {
+    throw new AppError(httpStatus.BAD_REQUEST, "Google User Id Not Found");
+  }
+
+  const email = googleIdTokenPayload.email.trim().toLowerCase();
+  const name = googleIdTokenPayload.name;
+  const googleId = googleIdTokenPayload.sub;
+
+  let user = await prisma.user.findUnique({
+    where: { googleId },
   });
 
-  let user = ifKidsExistWithGoogleAuth;
-
-  if (!ifKidsExistWithGoogleAuth) {
-    const ifKidsExistWithCredentials = await prisma.user.findUnique({
+  if (!user) {
+    user = await prisma.user.findFirst({
       where: {
-        email: googleIdTokenPayload.email,
+        email: {
+          equals: email,
+          mode: "insensitive",
+        },
+      },
+    });
+  }
+
+  if (!user) {
+    // New Google users start as kids
+    user = await prisma.user.create({
+      data: {
+        name,
+        email,
         role: Role.KIDS,
-        authProvider: AuthProvider.CREDENTIAL,
+        googleId,
+        authProvider: AuthProvider.GOOGLE,
+        emailVerified: true,
+        kids: {
+          create: {
+            name,
+            email,
+          },
+        },
       },
     });
 
-    if (ifKidsExistWithCredentials) {
-      if (!ifKidsExistWithCredentials.emailVerified) {
-        throw new AppError(httpStatus.FORBIDDEN, "Email Not Verified");
-      }
+    const tempatePath = path.join(
+      process.cwd(),
+      "/src/templates/user-welcome-email.ejs"
+    );
 
-      if (ifKidsExistWithCredentials.status === UserStatus.BLOCKED) {
-        throw new AppError(httpStatus.FORBIDDEN, "User Is Blocked");
-      }
+    const templateData = {
+      name: user.name,
+    };
 
-      if (
-        ifKidsExistWithCredentials.isDeleted ||
-        ifKidsExistWithCredentials.status === UserStatus.DELETED
-      ) {
-        throw new AppError(httpStatus.FORBIDDEN, "User Is Deleted");
-      }
+    const html = await ejs.renderFile(tempatePath, templateData);
 
-      user = await prisma.user.update({
-        where: {
-          id: ifKidsExistWithCredentials.id,
-        },
+    await transporter.sendMail({
+      from: config.email_sender,
+      to: user.email,
+      subject: "Welcome To Our System",
+      // text : `Your OTP is ${otp}`
+      // html: `<h1>Your OTP is ${otp}</h1>`
+      html,
+    });
+  } else {
+    if (!user.emailVerified && !googleIdTokenPayload.email_verified) {
+      throw new AppError(httpStatus.FORBIDDEN, "Email Not Verified");
+    }
 
-        data: {
-          googleId: googleIdTokenPayload.sub,
-        },
-      });
-    } else {
-      // Google Register
-      user = await prisma.user.create({
-        data: {
-          name: googleIdTokenPayload.name,
-          email: googleIdTokenPayload.email,
-          role: Role.KIDS,
-          googleId: googleIdTokenPayload.sub,
-          authProvider: AuthProvider.GOOGLE,
-          emailVerified: true,
-          kids: {
-            create: {
-              name: googleIdTokenPayload.name,
-              email: googleIdTokenPayload.email,
-            },
-          },
-        },
-      });
-      const tempatePath = path.join(
-        process.cwd(),
-        "/src/templates/kids-welcome-email.ejs"
+    if (user.googleId && user.googleId !== googleId) {
+      throw new AppError(
+        httpStatus.CONFLICT,
+        "This email is already linked to another Google account"
       );
+    }
 
-      const templateData = {
-        name: user.name,
-      };
-
-      const html = await ejs.renderFile(tempatePath, templateData);
-
-      await transporter.sendMail({
-        from: config.email_sender,
-        to: user.email,
-        subject: "Welcome To Our System",
-        // text : `Your OTP is ${otp}`
-        // html: `<h1>Your OTP is ${otp}</h1>`
-        html,
+    if (!user.googleId || !user.emailVerified) {
+      user = await prisma.user.update({
+        where: { id: user.id },
+        data: {
+          googleId,
+          ...(!user.emailVerified && { emailVerified: true }),
+        },
       });
     }
   }

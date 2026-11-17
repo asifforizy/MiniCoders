@@ -2,7 +2,9 @@
 
 import { cookies } from "next/headers";
 
-export const getMe = async () => {
+import type { GetMeResponse } from "@/utils/types";
+
+export const getMe = async (): Promise<GetMeResponse> => {
   const cookieStore = await cookies();
   const accessToken = cookieStore.get("accessToken")?.value;
 
@@ -27,7 +29,7 @@ export const getMe = async () => {
       return { success: false, message: result?.message ?? "Request failed" };
     }
 
-    return result;
+    return result as GetMeResponse;
   } catch (error) {
     console.log("getMe: fetch failed", error);
     return { success: false, message: "Unable to reach server" };

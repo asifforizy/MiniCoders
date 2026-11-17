@@ -37,8 +37,76 @@ export type ProblemsSearchParams = {
   limit?: string;
 };
 
+export type RankingEntry = {
+  rank: number;
+  userId: string;
+  name: string;
+  imageUrl: string;
+  solvedCount: number;
+  lastSolvedAt: string;
+};
+
+export type RankingsData = {
+  rankings: RankingEntry[];
+  totalParticipants: number;
+};
+
+export type RankingsResponse = {
+  success?: boolean;
+  message?: string;
+  data: RankingsData;
+};
+
 export type UserRole = "SUPER_ADMIN" | "ADMIN" | "KIDS";
 export type UserStatus = "ACTIVE" | "BLOCKED" | "DELETED";
+export type AuthProvider = "CREDENTIAL" | "GOOGLE";
+
+export type KidsProfile = {
+  id: string;
+  userId: string;
+  name: string;
+  email: string;
+  profilePhoto: string | null;
+  contactNumber: string | null;
+  address: string | null;
+  isDeleted: boolean;
+  deletedAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type UserProfile = {
+  id: string;
+  name: string;
+  email: string;
+  googleId: string | null;
+  authProvider: AuthProvider;
+  emailVerified: boolean;
+  role: UserRole;
+  status: UserStatus;
+  needPasswordChange: boolean;
+  imageUrl: string;
+  imagePublicId: string;
+  isDeleted: boolean;
+  deletedAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+  kids: KidsProfile | null;
+};
+
+export type GetMeResponse =
+  | {
+      success: true;
+      statusCode?: number;
+      message: string;
+      data: UserProfile;
+    }
+  | {
+      success: false;
+      statusCode?: number;
+      message: string;
+      data?: undefined;
+    };
 
 export type AdminUser = {
   id: string;

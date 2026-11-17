@@ -20,7 +20,13 @@ export function GoogleAuthButton() {
             return;
           }
           try {
-            await googleLogin({ idToken: res.credential });
+            const result = await googleLogin({ idToken: res.credential });
+
+            if (!result.success) {
+              toast.error(result.message);
+              return;
+            }
+
             await refreshProfile();
             toast.success("Login successful");
             router.push("/");

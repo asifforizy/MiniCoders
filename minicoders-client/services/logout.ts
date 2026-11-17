@@ -1,29 +1,19 @@
-export const logout = async () => {
-  try {
-    const API_URL = process.env.NEXT_PUBLIC_API_URL;
+"use server";
 
-    console.log("API URL:", API_URL);
+import { cookies } from "next/headers";
 
-    if (!API_URL) {
-      throw new Error("Backend URL is missing");
-    }
+export async function logout() {
+  const cookieStore = await cookies();
 
-    const response = await fetch(
-      `${API_URL}/api/v1/auth/logout`,
-      {
-        method: "POST",
-        credentials: "include",
-        cache: "no-store",
-      }
-    );
+  const options = {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax" as const,
+    path: "/",
+  };
 
-    if (!response.ok) {
-      throw new Error(`Logout failed: ${response.status}`);
-    }
+  cookieStore.set("accessToken", "", { ...options, maxAge: 0 });
+  cookieStore.set("refreshToken", "", { ...options, maxAge: 0 });
 
-    return true;
-  } catch (error) {
-    console.error("Logout error:", error);
-    throw error;
-  }
-};
+  return { success: true as const };
+}

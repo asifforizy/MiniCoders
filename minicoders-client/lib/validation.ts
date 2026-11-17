@@ -55,6 +55,9 @@ export const ForgotPasswordZodSchema = z.object({
 
 export const ResetPasswordZodSchema = z
 	.object({
+		otp: z
+			.string()
+			.regex(/^\d{6}$/, "Enter the 6-digit code from your email"),
 		password: z
 			.string()
 			.min(8, "Password Must Minimum 8 Characters Long.")

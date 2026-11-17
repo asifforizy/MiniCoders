@@ -48,7 +48,6 @@ From `MiniCoders-Server`:
 
 ## Known rough edges
 
-- `auth.service.ts` renders `kids-welcome-email.ejs`, but only `user-welcome-email.ejs` exists, so email verification fails while sending the welcome mail.
 - Registration shape has drifted: server validation uses `patient`, the service reads `kids`, and the client sends neither.
 
 ## Conventions

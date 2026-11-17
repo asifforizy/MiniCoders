@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -26,6 +27,7 @@ import { forgotPassword } from "@/services/forgot-pass";
 type FormValues = z.infer<typeof ForgotPasswordZodSchema>;
 
 export function ForgotPasswordForm() {
+    const router = useRouter();
     const [loading, setLoading] = useState(false);
 
     const form = useForm<FormValues>({
@@ -39,12 +41,18 @@ export function ForgotPasswordForm() {
         try {
             setLoading(true);
 
-            await forgotPassword(values);
-            toast.success(
-                "If the email exists, a password reset link has been sent."
-            );
+            const result = await forgotPassword(values);
 
-            form.reset();
+            if (!result.success) {
+                toast.error(result.message);
+                return;
+            }
+
+            toast.success("Verification code sent to your email.");
+
+            router.push(
+                `/reset-password?email=${encodeURIComponent(values.email)}`
+            );
         } catch (error) {
             toast.error(
                 error instanceof Error
@@ -64,7 +72,8 @@ export function ForgotPasswordForm() {
                 <CardTitle>Forgot your password?</CardTitle>
 
                 <CardDescription>
-                    Enter your email and we'll send you a reset link.
+                    Enter your email and we&apos;ll send you a 6-digit
+                    verification code.
                 </CardDescription>
             </CardHeader>
 

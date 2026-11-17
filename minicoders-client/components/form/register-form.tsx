@@ -48,11 +48,16 @@ export function RegisterForm() {
         try {
             setLoading(true);
 
-            await registerUser({
+            const result = await registerUser({
                 name: values.name,
                 email: values.email,
                 password: values.password,
             });
+
+            if (!result.success) {
+                toast.error(result.message);
+                return;
+            }
 
             toast.success(
                 "Account created. Please verify your email."

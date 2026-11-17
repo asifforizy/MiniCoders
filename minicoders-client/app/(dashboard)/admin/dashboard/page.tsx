@@ -1,8 +1,8 @@
 import { Suspense } from "react";
 
 import { StatCards } from "@/components/admin/dashboard/stat-cards";
-import { RegistrationLineChart } from "@/components/admin/dashboard/registration-line-chart";
-import { RolePieChart } from "@/components/admin/dashboard/role-pie-chart";
+import { RegistrationLineChart } from "@/components/charts/registration-line-chart";
+import { RolePieChart } from "@/components/charts/role-pie-chart";
 import { UserStatusManagement } from "@/components/admin/dashboard/user-status-management";
 import { ProblemManagement } from "@/components/admin/dashboard/problem-management";
 import {

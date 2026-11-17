@@ -13,6 +13,7 @@ const router = express.Router();
 
 
 
+router.get("/stats", auth(Role.SUPER_ADMIN), superAdminController.getStats);
 router.get("/users", auth(Role.SUPER_ADMIN), superAdminController.getAllUsers);
 router.patch("/users/:id", auth(Role.SUPER_ADMIN), superAdminController.updateUserStatus);
 router.post("/problems", auth(Role.SUPER_ADMIN),  validateRequest(problemValidation.createProblem),superAdminController.createProblem);

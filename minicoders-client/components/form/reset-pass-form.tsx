@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -29,7 +30,7 @@ export function ResetPasswordForm() {
     const router = useRouter();
     const searchParams = useSearchParams();
 
-    const token = searchParams.get("token");
+    const email = searchParams.get("email") ?? "";
 
     const [loading, setLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
@@ -37,22 +38,31 @@ export function ResetPasswordForm() {
 
     const form = useForm<FormValues>({
         resolver: zodResolver(ResetPasswordZodSchema),
-        defaultValues: { password: "", confirmPassword: "" },
+        defaultValues: { otp: "", password: "", confirmPassword: "" },
     });
 
     const onSubmit = async (values: FormValues) => {
-        if (!token) {
-            toast.error("Invalid or missing reset token");
+        if (!email) {
+            toast.error("Email is missing. Please request a new code.");
             return;
         }
 
         try {
             setLoading(true);
 
-            await resetPassword({ token, password: values.password });
+            const result = await resetPassword({
+                email,
+                otp: values.otp,
+                newPassword: values.password,
+            });
+
+            if (!result.success) {
+                toast.error(result.message);
+                return;
+            }
 
             toast.success("Password reset successful");
-            router.push("/login");
+            router.replace("/login");
         } catch (error) {
             toast.error(
                 error instanceof Error ? error.message : "Password reset failed"
@@ -62,13 +72,39 @@ export function ResetPasswordForm() {
         }
     };
 
+    if (!email) {
+        return (
+            <Card className="w-full max-w-md">
+                <CardHeader className="text-center">
+                    <CardTitle>Reset Password</CardTitle>
+
+                    <CardDescription>
+                        We could not find the email address for this reset
+                        request.
+                    </CardDescription>
+                </CardHeader>
+
+                <CardContent>
+                    <Button
+                        className="w-full"
+                        nativeButton={false}
+                        render={<Link href="/forgot-password" />}
+                    >
+                        Request a new code
+                    </Button>
+                </CardContent>
+            </Card>
+        );
+    }
+
     return (
         <Card className="w-full max-w-md">
             <CardHeader className="text-center">
                 <CardTitle>Reset Password</CardTitle>
 
                 <CardDescription>
-                    Create a new password for your account.
+                    Enter the 6-digit code sent to {email} and choose a new
+                    password. The code expires in 5 minutes.
                 </CardDescription>
             </CardHeader>
 
@@ -78,10 +114,30 @@ export function ResetPasswordForm() {
                     className="space-y-5"
                 >
                     <div className="space-y-2">
-                        <Label>New Password</Label>
+                        <Label htmlFor="otp">Verification code</Label>
+
+                        <Input
+                            id="otp"
+                            inputMode="numeric"
+                            maxLength={6}
+                            placeholder="123456"
+                            className="text-center text-lg tracking-widest"
+                            {...form.register("otp")}
+                        />
+
+                        {form.formState.errors.otp && (
+                            <p className="text-sm text-destructive">
+                                {form.formState.errors.otp.message}
+                            </p>
+                        )}
+                    </div>
+
+                    <div className="space-y-2">
+                        <Label htmlFor="password">New Password</Label>
 
                         <div className="relative">
                             <Input
+                                id="password"
                                 type={showPassword ? "text" : "password"}
                                 className="pr-10"
                                 {...form.register("password")}
@@ -110,10 +166,13 @@ export function ResetPasswordForm() {
                     </div>
 
                     <div className="space-y-2">
-                        <Label>Confirm Password</Label>
+                        <Label htmlFor="confirmPassword">
+                            Confirm Password
+                        </Label>
 
                         <div className="relative">
                             <Input
+                                id="confirmPassword"
                                 type={
                                     showConfirmPassword ? "text" : "password"
                                 }
@@ -157,6 +216,16 @@ export function ResetPasswordForm() {
 
                         Reset Password
                     </Button>
+
+                    <p className="text-center text-sm text-muted-foreground">
+                        Need a new code?{" "}
+                        <Link
+                            href="/forgot-password"
+                            className="font-medium text-primary hover:underline"
+                        >
+                            Request another
+                        </Link>
+                    </p>
                 </form>
             </CardContent>
         </Card>

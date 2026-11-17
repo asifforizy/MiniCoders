@@ -19,18 +19,23 @@ export async function verifyEmail(payload: { email: string; otp: string }) {
   const accessToken: string | undefined = data?.data?.accessToken;
   const refreshToken: string | undefined = data?.data?.refreshToken;
 
-  if (accessToken) {
-    const cookieStore = await cookies();
-    const options = {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax" as const,
-      path: "/",
+  if (!accessToken) {
+    return {
+      success: false as const,
+      message: "Email verified, but sign-in failed. Please log in.",
     };
-    cookieStore.set("accessToken", accessToken, { ...options, maxAge: 60 * 60 * 24 });
-    if (refreshToken) {
-      cookieStore.set("refreshToken", refreshToken, { ...options, maxAge: 60 * 60 * 24 * 7 });
-    }
+  }
+
+  const cookieStore = await cookies();
+  const options = {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax" as const,
+    path: "/",
+  };
+  cookieStore.set("accessToken", accessToken, { ...options, maxAge: 60 * 60 * 24 });
+  if (refreshToken) {
+    cookieStore.set("refreshToken", refreshToken, { ...options, maxAge: 60 * 60 * 24 * 7 });
   }
 
   return { success: true as const, data };

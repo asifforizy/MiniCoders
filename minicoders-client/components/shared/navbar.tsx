@@ -17,6 +17,7 @@ import {
 
 import {
   Sheet,
+  SheetClose,
   SheetContent,
   SheetHeader,
   SheetTitle,
@@ -27,6 +28,7 @@ import { Button } from '@/components/ui/button'
 import Logo from '@/assets/logo'
 import { ModeToggle } from './mode-toggle'
 import { logout } from '@/services/logout'
+import type { GetMeResponse } from '@/utils/types'
 
 const navItems = [
   { label: 'Home', href: '/' },
@@ -39,26 +41,8 @@ const navItems = [
   { label: 'Contact', href: '/contact' },
 ]
 
-type IUser = {
-  success: boolean
-  message: string
-  data: {
-    id: string
-    name: string
-    email: string
-    role: string
-    status: string
-    imageUrl: string
-    emailVerified: boolean
-    registerUser?: {
-      contactNumber: string
-      address: string | null
-    }
-  }
-}
-
 type NavbarProps = {
-  user: IUser
+  user: GetMeResponse
 }
 
 export function Navbar({ user }: NavbarProps) {
@@ -67,7 +51,10 @@ export function Navbar({ user }: NavbarProps) {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [isLoggingOut, setIsLoggingOut] = useState(false)
 
-  const role = user.success ? user.data.role : null
+  const profile = user.success ? user.data : null
+  const role = profile?.role ?? null
+  const displayName = profile?.kids?.name || profile?.name || ''
+  const displayEmail = profile?.kids?.email || profile?.email || ''
   const dashboardHref =
     role === 'ADMIN'
       ? '/admin/dashboard'
@@ -140,10 +127,9 @@ export function Navbar({ user }: NavbarProps) {
                         : pathname.startsWith(item.href)
 
                     return (
-                      <Link
+                      <SheetClose
                         key={item.href}
-                        href={item.href}
-                        onClick={() => setMobileOpen(false)}
+                        render={<Link href={item.href} />}
                         className={`rounded-md px-3 py-2 text-sm font-medium transition-colors ${
                           isActive
                             ? 'bg-muted font-bold text-foreground'
@@ -151,7 +137,7 @@ export function Navbar({ user }: NavbarProps) {
                         }`}
                       >
                         {item.label}
-                      </Link>
+                      </SheetClose>
                     )
                   })}
                 </div>
@@ -163,22 +149,21 @@ export function Navbar({ user }: NavbarProps) {
 
                     <div className="px-3 py-1.5">
                       <p className="text-sm font-medium">
-                        {user.data.name}
+                        {displayName}
                       </p>
 
                       <p className="text-xs text-muted-foreground">
-                        {user.data.email}
+                        {displayEmail}
                       </p>
                     </div>
 
-                    <Link
-                      href={dashboardHref}
-                      onClick={() => setMobileOpen(false)}
+                    <SheetClose
+                      render={<Link href={dashboardHref} />}
                       className="flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium hover:bg-muted"
                     >
                       <LayoutDashboard className="size-4" />
                       Dashboard
-                    </Link>
+                    </SheetClose>
 
                     <button
                       type="button"
@@ -267,11 +252,11 @@ export function Navbar({ user }: NavbarProps) {
 
                   <div className="px-2 py-1.5">
                     <p className="text-sm font-medium">
-                      {user.data.name}
+                      {displayName}
                     </p>
 
                     <p className="text-xs text-muted-foreground">
-                      {user.data.email}
+                      {displayEmail}
                     </p>
                   </div>
 

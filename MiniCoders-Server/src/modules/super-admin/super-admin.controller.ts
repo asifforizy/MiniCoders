@@ -33,6 +33,18 @@ const updateUserStatus = catchAsync(async (req: Request, res: Response) => {
 
 
 
+const getStats = catchAsync(async (req: Request, res: Response) => {
+  const result = await superAdminService.getStatsFromDB();
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "Dashboard stats retrieved successfully",
+    data: result,
+  });
+});
+
+
 const createProblem = catchAsync(async (req: Request, res: Response) => {
   const authorId = req.user!.userId; 
 
@@ -73,6 +85,7 @@ const makeAdmin = catchAsync(async (req: Request, res: Response) => {
 export const superAdminController = {
     getAllUsers,
     updateUserStatus,
+    getStats,
     createProblem,
     deleteProblem,
     makeAdmin,

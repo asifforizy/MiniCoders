@@ -1,6 +1,10 @@
 "use server";
 
-export async function resetPassword(payload: { token: string; password: string }) {
+export async function resetPassword(payload: {
+  email: string;
+  otp: string;
+  newPassword: string;
+}) {
   const res = await fetch(`${process.env.BACKEND_API_URL}/api/v1/auth/reset-password`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },

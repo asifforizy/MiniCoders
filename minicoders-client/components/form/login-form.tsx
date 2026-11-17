@@ -19,7 +19,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { input, type z } from "zod";
+import { type z } from "zod";
 import { loginUser } from "@/services/login";
 
 import { LoginZodSchema } from "@/lib/validation";
@@ -45,9 +45,15 @@ export function LoginForm() {
         try {
             setLoading(true);
 
-            await loginUser(values);
+            const result = await loginUser(values);
+
+            if (!result.success) {
+                toast.error(result.message);
+                return;
+            }
+
             toast.success("Login successful");
-            router.push("/");
+            router.replace("/");
             router.refresh();
         } catch (error) {
             toast.error(
@@ -164,7 +170,7 @@ export function LoginForm() {
                     <GoogleAuthButton />
 
                     <p className="text-center text-sm text-muted-foreground">
-                        Don't have an account?{" "}
+                        Don&apos;t have an account?{" "}
                         <Link
                             href="/register"
                             className="font-medium text-primary hover:underline"

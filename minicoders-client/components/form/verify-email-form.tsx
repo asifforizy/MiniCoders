@@ -43,10 +43,18 @@ export function VerifyEmailForm() {
 
     try {
       setLoading(true);
-      await verifyEmail({ email, otp });
+
+      const result = await verifyEmail({ email, otp });
+
+      if (!result.success) {
+        toast.error(result.message);
+        return;
+      }
+
       await refreshProfile();
       toast.success("Email verified successfully");
-      router.push("/login");
+      router.replace("/");
+      router.refresh();
     } catch (error) {
       toast.error(
         error instanceof Error ? error.message : "Email verification failed"
