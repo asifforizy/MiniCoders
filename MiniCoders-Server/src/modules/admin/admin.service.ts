@@ -36,6 +36,57 @@ const updateUserStatusIntoDB = async (id: string, payload: IUpdatedStatus) => {
   return updatedUser;
 };
 
+const getStatsFromDB = async () => {
+  const [users, problemCount] = await Promise.all([
+    prisma.user.findMany({
+      select: { role: true, status: true, createdAt: true },
+    }),
+    prisma.problem.count(),
+  ]);
+
+  const roleCounts = { KIDS: 0, ADMIN: 0, SUPER_ADMIN: 0 };
+  const statusCounts = { ACTIVE: 0, BLOCKED: 0, DELETED: 0 };
+
+  for (const user of users) {
+    roleCounts[user.role] += 1;
+    statusCounts[user.status] += 1;
+  }
+
+  const now = new Date();
+  const registrations = Array.from({ length: 6 }, (_, index) => {
+    const start = new Date(now.getFullYear(), now.getMonth() - (5 - index), 1);
+    const end = new Date(start.getFullYear(), start.getMonth() + 1, 1);
+
+    return {
+      label: start.toLocaleString("en-US", { month: "short" }),
+      count: users.filter(
+        (user) => user.createdAt >= start && user.createdAt < end
+      ).length,
+    };
+  });
+
+  return {
+    totals: {
+      users: users.length,
+      kids: roleCounts.KIDS,
+      admins: roleCounts.ADMIN,
+      superAdmins: roleCounts.SUPER_ADMIN,
+      problems: problemCount,
+    },
+    roles: [
+      { label: "Kids", value: roleCounts.KIDS },
+      { label: "Admins", value: roleCounts.ADMIN },
+      { label: "Super Admins", value: roleCounts.SUPER_ADMIN },
+    ],
+    statuses: {
+      active: statusCounts.ACTIVE,
+      blocked: statusCounts.BLOCKED,
+      deleted: statusCounts.DELETED,
+    },
+    registrations,
+  };
+};
+
 const getAllProblemsFromDB = async () => {
   const allProblems = await prisma.problem.findMany({
     include: {
@@ -118,6 +169,7 @@ const deleteProblemFromDB = async (problemId: string) => {
 export const adminService = {
   getAllUsersFromDB,
   updateUserStatusIntoDB,
+  getStatsFromDB,
   getAllProblemsFromDB,
   createProblemIntoDB,
   deleteProblemFromDB,

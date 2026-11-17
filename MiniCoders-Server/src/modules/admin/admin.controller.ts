@@ -32,6 +32,18 @@ const updateUserStatus = catchAsync(async (req: Request, res: Response) => {
 
 
 
+const getStats = catchAsync(async (req: Request, res: Response) => {
+  const result = await adminService.getStatsFromDB();
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "Dashboard stats retrieved successfully",
+    data: result,
+  });
+});
+
+
 const getAllProblems = catchAsync(async (req: Request, res: Response) => {
   const result = await adminService.getAllProblemsFromDB();
 
@@ -69,9 +81,14 @@ const deleteProblem = catchAsync(async (req: Request, res: Response) => {
 });
 
 
+
+
+
+
 export const adminController = {
     getAllUsers,
     updateUserStatus,
+    getStats,
     createProblem,
     getAllProblems,
     deleteProblem,

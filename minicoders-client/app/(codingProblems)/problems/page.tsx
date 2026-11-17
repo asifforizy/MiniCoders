@@ -8,6 +8,7 @@ const difficultyStyles: Record<Difficulty, string> = {
   EASY: "text-chart-2",
   MEDIUM: "text-chart-4",
   HARD: "text-destructive",
+  EXPERT: "text-chart-5",
 };
 
 // ✅ New default export — sync wrapper with Suspense
