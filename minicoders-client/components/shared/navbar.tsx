@@ -67,6 +67,14 @@ export function Navbar({ user }: NavbarProps) {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [isLoggingOut, setIsLoggingOut] = useState(false)
 
+  const role = user.success ? user.data.role : null
+  const dashboardHref =
+    role === 'ADMIN'
+      ? '/admin/dashboard'
+      : role === 'SUPER_ADMIN'
+        ? '/super-admin/dashboard'
+        : '/dashboard'
+
   const handleLogout = async () => {
     if (isLoggingOut) return
 
@@ -164,7 +172,7 @@ export function Navbar({ user }: NavbarProps) {
                     </div>
 
                     <Link
-                      href="/dashboard"
+                      href={dashboardHref}
                       onClick={() => setMobileOpen(false)}
                       className="flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium hover:bg-muted"
                     >
@@ -270,9 +278,9 @@ export function Navbar({ user }: NavbarProps) {
                   <DropdownMenuSeparator />
 
                   <DropdownMenuItem
-                    render={<Link href="/dashboard" />}
+                    render={<Link href={dashboardHref} />}
                     className={`flex cursor-pointer items-center gap-2 ${
-                      pathname.startsWith('/dashboard')
+                      pathname.startsWith(dashboardHref)
                         ? 'font-medium'
                         : ''
                     }`}

@@ -131,7 +131,7 @@ export default function HomePage() {
 
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <Link
-              href="/register"
+              href="/games"
               className="inline-flex items-center gap-2 rounded-lg bg-primary px-7 py-3 font-semibold text-primary-foreground shadow-lg transition hover:scale-105 hover:bg-primary/90"
             >
               Start playing
