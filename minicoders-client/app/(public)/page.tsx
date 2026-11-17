@@ -57,7 +57,7 @@ const ways: {
     icon: Trophy,
     title: "Join Contests",
     text: "Race against friends, climb the leaderboard and win badges for your skills.",
-    href: "/contests",
+    href: "/contest",
     soon: true,
   },
 ];
@@ -297,7 +297,7 @@ export default function HomePage() {
             Join for free and write your first line of code in minutes.
           </p>
           <Link
-            href="/signup"
+            href="/register"
             className="relative mt-8 inline-flex items-center gap-2 rounded-lg bg-primary px-7 py-3 font-semibold text-primary-foreground shadow-lg transition hover:scale-105 hover:bg-primary/90"
           >
             Create free account

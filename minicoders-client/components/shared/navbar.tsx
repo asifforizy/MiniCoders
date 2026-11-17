@@ -1,10 +1,12 @@
+
 'use client'
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { usePathname, useRouter } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 import { LayoutDashboard, LogOut, Menu, User } from 'lucide-react'
 import { toast } from 'sonner'
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,6 +14,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+
 import {
   Sheet,
   SheetContent,
@@ -21,19 +24,19 @@ import {
 } from '@/components/ui/sheet'
 
 import { Button } from '@/components/ui/button'
-import { logout } from '@/services/logout'
 import Logo from '@/assets/logo'
 import { ModeToggle } from './mode-toggle'
+import { logout } from '@/services/logout'
 
 const navItems = [
-    { label: 'Home', href: '/' },
-    { label: 'Games', href: '/games' },
-    { label: 'Problems', href: '/problems' },
-    { label: 'Contest', href: '/contest' },
-    { label: 'Rankings', href: '/rankings' },
-    { label: 'Services', href: '/services' },
-    { label: 'About', href: '/about' },
-    { label: 'Contact', href: '/contact' },
+  { label: 'Home', href: '/' },
+  { label: 'Games', href: '/games' },
+  { label: 'Problems', href: '/problems' },
+  { label: 'Contest', href: '/contest' },
+  { label: 'Rankings', href: '/rankings' },
+  { label: 'Services', href: '/services' },
+  { label: 'About', href: '/about' },
+  { label: 'Contact', href: '/contact' },
 ]
 
 type IUser = {
@@ -59,19 +62,30 @@ type NavbarProps = {
 }
 
 export function Navbar({ user }: NavbarProps) {
-  const router = useRouter()
   const pathname = usePathname()
+
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [isLoggingOut, setIsLoggingOut] = useState(false)
 
   const handleLogout = async () => {
+    if (isLoggingOut) return
+
     try {
+      setIsLoggingOut(true)
+
       await logout()
+
       toast.success('User Logged Out Successfully!')
+
       setMobileOpen(false)
-      router.push('/login')
-      router.refresh()
+
+      window.location.replace('/login')
     } catch (error) {
-      toast.error('Failed to logout')
+      console.error('Logout failed:', error)
+
+      toast.error('Failed to logout. Please try again.')
+
+      setIsLoggingOut(false)
     }
   }
 
@@ -79,8 +93,10 @@ export function Navbar({ user }: NavbarProps) {
     <nav className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center">
+
           {/* LEFT: mobile menu + logo */}
           <div className="flex flex-1 items-center gap-2">
+
             <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
               <SheetTrigger
                 render={
@@ -120,10 +136,11 @@ export function Navbar({ user }: NavbarProps) {
                         key={item.href}
                         href={item.href}
                         onClick={() => setMobileOpen(false)}
-                        className={`rounded-md px-3 py-2 text-sm font-medium transition-colors ${isActive
+                        className={`rounded-md px-3 py-2 text-sm font-medium transition-colors ${
+                          isActive
                             ? 'bg-muted font-bold text-foreground'
                             : 'text-muted-foreground hover:bg-muted hover:text-foreground'
-                          }`}
+                        }`}
                       >
                         {item.label}
                       </Link>
@@ -135,10 +152,12 @@ export function Navbar({ user }: NavbarProps) {
 
                 {user.success ? (
                   <div className="flex flex-col gap-1 px-1">
+
                     <div className="px-3 py-1.5">
                       <p className="text-sm font-medium">
                         {user.data.name}
                       </p>
+
                       <p className="text-xs text-muted-foreground">
                         {user.data.email}
                       </p>
@@ -156,11 +175,13 @@ export function Navbar({ user }: NavbarProps) {
                     <button
                       type="button"
                       onClick={handleLogout}
-                      className="flex items-center gap-2 rounded-md px-3 py-2 text-left text-sm font-medium text-red-600 hover:bg-red-50 dark:hover:bg-red-950/40"
+                      disabled={isLoggingOut}
+                      className="flex items-center gap-2 rounded-md px-3 py-2 text-left text-sm font-medium text-red-600 hover:bg-red-50 disabled:opacity-50 dark:hover:bg-red-950/40"
                     >
                       <LogOut className="size-4" />
-                      Logout
+                      {isLoggingOut ? 'Logging out...' : 'Logout'}
                     </button>
+
                   </div>
                 ) : (
                   <div className="px-1">
@@ -188,6 +209,7 @@ export function Navbar({ user }: NavbarProps) {
               <Logo className="h-7 w-auto text-[#3902FF] dark:text-[#7B5CFF]" />
               MiniCoders
             </Link>
+
           </div>
 
           {/* CENTER: desktop links */}
@@ -202,10 +224,11 @@ export function Navbar({ user }: NavbarProps) {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`text-sm font-medium transition-colors ${isActive
+                  className={`text-sm font-medium transition-colors ${
+                    isActive
                       ? 'font-bold text-foreground'
                       : 'text-muted-foreground hover:text-foreground'
-                    }`}
+                  }`}
                 >
                   {item.label}
                 </Link>
@@ -215,6 +238,7 @@ export function Navbar({ user }: NavbarProps) {
 
           {/* RIGHT: theme toggle + user menu / login */}
           <div className="flex flex-1 items-center justify-end gap-5">
+
             <ModeToggle />
 
             {user.success ? (
@@ -223,6 +247,7 @@ export function Navbar({ user }: NavbarProps) {
                   render={
                     <button
                       type="button"
+                      aria-label="Open user menu"
                       className="flex size-9 items-center justify-center rounded-full bg-muted transition-opacity hover:opacity-80"
                     />
                   }
@@ -231,10 +256,12 @@ export function Navbar({ user }: NavbarProps) {
                 </DropdownMenuTrigger>
 
                 <DropdownMenuContent align="end" className="w-56">
+
                   <div className="px-2 py-1.5">
                     <p className="text-sm font-medium">
                       {user.data.name}
                     </p>
+
                     <p className="text-xs text-muted-foreground">
                       {user.data.email}
                     </p>
@@ -244,8 +271,11 @@ export function Navbar({ user }: NavbarProps) {
 
                   <DropdownMenuItem
                     render={<Link href="/dashboard" />}
-                    className={`flex cursor-pointer items-center gap-2 ${pathname.startsWith('/dashboard') ? 'font-medium' : ''
-                      }`}
+                    className={`flex cursor-pointer items-center gap-2 ${
+                      pathname.startsWith('/dashboard')
+                        ? 'font-medium'
+                        : ''
+                    }`}
                   >
                     <LayoutDashboard className="size-4" />
                     Dashboard
@@ -255,11 +285,13 @@ export function Navbar({ user }: NavbarProps) {
 
                   <DropdownMenuItem
                     onClick={handleLogout}
+                    disabled={isLoggingOut}
                     className="flex cursor-pointer items-center gap-2 text-red-600 focus:text-red-600"
                   >
                     <LogOut className="size-4" />
-                    Logout
+                    {isLoggingOut ? 'Logging out...' : 'Logout'}
                   </DropdownMenuItem>
+
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
@@ -271,6 +303,7 @@ export function Navbar({ user }: NavbarProps) {
                 Login
               </Button>
             )}
+
           </div>
         </div>
       </div>
