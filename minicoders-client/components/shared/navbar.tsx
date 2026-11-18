@@ -32,6 +32,7 @@ import type { GetMeResponse } from '@/utils/types'
 
 const navItems = [
   { label: 'Home', href: '/' },
+  { label: 'Learn', href: '/learn' },
   { label: 'Games', href: '/games' },
   { label: 'Problems', href: '/problems' },
   { label: 'Contest', href: '/contest' },
