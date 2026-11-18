@@ -26,6 +26,20 @@ const getAllProblems = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getProblemBySlug = catchAsync(async (req: Request, res: Response) => {
+  const slug = req.params.slug as string;
+
+  const result = await problemsService.getProblemBySlugFromDB(slug);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "Problem fetched successfully",
+    data: result,
+  });
+});
+
 export const problemsController = {
   getAllProblems,
+  getProblemBySlug,
 };

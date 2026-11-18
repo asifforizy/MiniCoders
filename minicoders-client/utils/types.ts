@@ -37,6 +37,23 @@ export type ProblemsSearchParams = {
   limit?: string;
 };
 
+export type ProblemAuthor = {
+  id: string;
+  name: string;
+  imageUrl: string;
+};
+
+export type ProblemDetail = Problem & {
+  updatedAt: string;
+  author: ProblemAuthor;
+};
+
+export type ProblemDetailResponse = {
+  success?: boolean;
+  message?: string;
+  data: ProblemDetail;
+};
+
 export type RankingEntry = {
   rank: number;
   userId: string;

@@ -79,6 +79,36 @@ const getAllProblemsFromDB = async (query: TProblemQuery) => {
   };
 };
 
+const getProblemBySlugFromDB = async (slug: string) => {
+  const problem = await prisma.problem.findUnique({
+    where: { slug },
+    select: {
+      id: true,
+      title: true,
+      slug: true,
+      description: true,
+      difficulty: true,
+      points: true,
+      createdAt: true,
+      updatedAt: true,
+      author: {
+        select: {
+          id: true,
+          name: true,
+          imageUrl: true,
+        },
+      },
+    },
+  });
+
+  if (!problem) {
+    throw new AppError(httpStatus.NOT_FOUND, "Problem not found");
+  }
+
+  return problem;
+};
+
 export const problemsService = {
   getAllProblemsFromDB,
+  getProblemBySlugFromDB,
 };
