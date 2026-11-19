@@ -1,17 +1,67 @@
 model Problem {
-    id          String     @id @default(uuid())
-    authorId    String
-    author      User       @relation("ProblemAuthor", fields: [authorId], references: [id], onDelete: Restrict, onUpdate: Cascade)
-    title       String
-    slug        String     @unique 
-    description String     @db.Text
-    difficulty  Difficulty
-    points      Int        @default(100)
-    createdAt   DateTime   @default(now())
-    updatedAt   DateTime   @updatedAt
+  id                 String     @id @default(uuid())
+  authorId           String
+  author             User       @relation("ProblemAuthor", fields: [authorId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  number             Int?       @unique
+  title              String
+  slug               String     @unique
+  description        String     @db.Text
+  difficulty         Difficulty
+  topic              String?
+  inputFormat        String?    @db.Text
+  outputFormat       String?    @db.Text
+  constraints        String?    @db.Text
+  hints              String[]   @default([])
+  starterCode        Json?
+  supportedLanguages String[]   @default([])
+  timeLimit          Float      @default(2)
+  memoryLimit        Int        @default(128000)
+  isPublished        Boolean    @default(true)
+  points             Int        @default(100)
+  createdAt          DateTime   @default(now())
+  updatedAt          DateTime   @updatedAt
 
-    submissions Submission[]
+  submissions Submission[]
+  testCases   TestCase[]
+  progress    ProblemProgress[]
 
-    @@index([difficulty])
-    @@index([authorId])
+  @@index([difficulty])
+  @@index([topic])
+  @@index([isPublished])
+  @@index([authorId])
+}
+
+model TestCase {
+  id             String   @id @default(uuid())
+  problemId      String
+  problem        Problem  @relation(fields: [problemId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  input          String   @db.Text
+  expectedOutput String   @db.Text
+  isPublic       Boolean  @default(false)
+  order          Int      @default(0)
+  explanation    String?  @db.Text
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@unique([problemId, order])
+  @@index([problemId, isPublic])
+  @@map("test_cases")
+}
+
+model ProblemProgress {
+  id            String    @id @default(uuid())
+  userId        String
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  problemId     String
+  problem       Problem   @relation(fields: [problemId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  solved        Boolean   @default(false)
+  attempts      Int       @default(0)
+  solvedAt      DateTime?
+  lastAttemptAt DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@unique([userId, problemId])
+  @@index([userId, solved])
+  @@map("problem_progress")
 }

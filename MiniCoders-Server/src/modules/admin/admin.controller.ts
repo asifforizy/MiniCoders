@@ -56,6 +56,33 @@ const getAllProblems = catchAsync(async (req: Request, res: Response) => {
 });
 
 
+const getProblemById = catchAsync(async (req: Request, res: Response) => {
+  const result = await adminService.getProblemByIdFromDB(
+    req.params.id as string
+  );
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "Problem retrieved successfully",
+    data: result,
+  });
+});
+
+const updateProblem = catchAsync(async (req: Request, res: Response) => {
+  const result = await adminService.updateProblemIntoDB(
+    req.params.id as string,
+    req.body
+  );
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "Problem updated successfully",
+    data: result,
+  });
+});
+
 const createProblem = catchAsync(async (req: Request, res: Response) => {
   const authorId = req.user!.userId; 
 
@@ -91,5 +118,7 @@ export const adminController = {
     getStats,
     createProblem,
     getAllProblems,
+    getProblemById,
+    updateProblem,
     deleteProblem,
 }

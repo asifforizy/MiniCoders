@@ -1,0 +1,346 @@
+
+> minicoders-server@1.0.0 dev
+> tsx watch src/server.ts
+
+connect to database successfully
+connect to redis successfully
+Server is running on port 5000
+1:58:27 PM [tsx] change in ./src\modules\submissions\submissions.service.ts Restarting...
+connect to database successfully
+connect to redis successfully
+Server is running on port 5000
+1:59:52 PM [tsx] change in ./src\modules\judge0\judge0.service.ts Restarting...
+connect to database successfully
+connect to redis successfully
+Server is running on port 5000
+2:00:03 PM [tsx] change in ./src\modules\judge0\judge0.service.ts Restarting...
+connect to database successfully
+connect to redis successfully
+Server is running on port 5000
+2:00:13 PM [tsx] change in ./src\modules\judge0\judge0.service.ts Restarting...
+connect to database successfully
+connect to redis successfully
+Server is running on port 5000
+2:00:35 PM [tsx] change in ./src\modules\judge0\judge0.service.ts Restarting...
+connect to database successfully
+connect to redis successfully
+Server is running on port 5000
+2:00:51 PM [tsx] change in ./src\modules\evaluation\evaluation.service.ts Restarting...
+connect to database successfully
+connect to redis successfully
+Server is running on port 5000
+[
+  {
+    expected: 'string',
+    code: 'invalid_type',
+    path: [ 'problemId' ],
+    message: 'Problem is required'
+  },
+  {
+    code: 'invalid_value',
+    values: [ 'python', 'javascript', 'cpp', 'java' ],
+    path: [ 'language' ],
+    message: 'Unsupported programming language'
+  },
+  {
+    expected: 'string',
+    code: 'invalid_type',
+    path: [ 'code' ],
+    message: 'Source code is required'
+  }
+]
+[
+  {
+    expected: 'string',
+    code: 'invalid_type',
+    path: [ 'problemId' ],
+    message: 'Problem is required'
+  },
+  {
+    code: 'invalid_value',
+    values: [ 'python', 'javascript', 'cpp', 'java' ],
+    path: [ 'language' ],
+    message: 'Unsupported programming language'
+  },
+  {
+    expected: 'string',
+    code: 'invalid_type',
+    path: [ 'code' ],
+    message: 'Source code is required'
+  }
+]
+[
+  {
+    expected: 'string',
+    code: 'invalid_type',
+    path: [ 'problemId' ],
+    message: 'Problem is required'
+  },
+  {
+    code: 'invalid_value',
+    values: [ 'python', 'javascript', 'cpp', 'java' ],
+    path: [ 'language' ],
+    message: 'Unsupported programming language'
+  },
+  {
+    expected: 'string',
+    code: 'invalid_type',
+    path: [ 'code' ],
+    message: 'Source code is required'
+  }
+]
+[
+  {
+    expected: 'string',
+    code: 'invalid_type',
+    path: [ 'problemId' ],
+    message: 'Problem is required'
+  },
+  {
+    code: 'invalid_value',
+    values: [ 'python', 'javascript', 'cpp', 'java' ],
+    path: [ 'language' ],
+    message: 'Unsupported programming language'
+  },
+  {
+    expected: 'string',
+    code: 'invalid_type',
+    path: [ 'code' ],
+    message: 'Source code is required'
+  }
+]
+[
+  {
+    expected: 'string',
+    code: 'invalid_type',
+    path: [ 'problemId' ],
+    message: 'Problem is required'
+  },
+  {
+    code: 'invalid_value',
+    values: [ 'python', 'javascript', 'cpp', 'java' ],
+    path: [ 'language' ],
+    message: 'Unsupported programming language'
+  },
+  {
+    expected: 'string',
+    code: 'invalid_type',
+    path: [ 'code' ],
+    message: 'Source code is required'
+  }
+]
+[
+  {
+    expected: 'string',
+    code: 'invalid_type',
+    path: [ 'problemId' ],
+    message: 'Problem is required'
+  },
+  {
+    code: 'invalid_value',
+    values: [ 'python', 'javascript', 'cpp', 'java' ],
+    path: [ 'language' ],
+    message: 'Unsupported programming language'
+  },
+  {
+    expected: 'string',
+    code: 'invalid_type',
+    path: [ 'code' ],
+    message: 'Source code is required'
+  }
+]
+[
+  {
+    expected: 'string',
+    code: 'invalid_type',
+    path: [ 'problemId' ],
+    message: 'Problem is required'
+  },
+  {
+    code: 'invalid_value',
+    values: [ 'python', 'javascript', 'cpp', 'java' ],
+    path: [ 'language' ],
+    message: 'Unsupported programming language'
+  },
+  {
+    expected: 'string',
+    code: 'invalid_type',
+    path: [ 'code' ],
+    message: 'Source code is required'
+  }
+]
+[
+  {
+    expected: 'string',
+    code: 'invalid_type',
+    path: [ 'problemId' ],
+    message: 'Problem is required'
+  },
+  {
+    code: 'invalid_value',
+    values: [ 'python', 'javascript', 'cpp', 'java' ],
+    path: [ 'language' ],
+    message: 'Unsupported programming language'
+  },
+  {
+    expected: 'string',
+    code: 'invalid_type',
+    path: [ 'code' ],
+    message: 'Source code is required'
+  }
+]
+[
+  {
+    expected: 'string',
+    code: 'invalid_type',
+    path: [ 'problemId' ],
+    message: 'Problem is required'
+  },
+  {
+    code: 'invalid_value',
+    values: [ 'python', 'javascript', 'cpp', 'java' ],
+    path: [ 'language' ],
+    message: 'Unsupported programming language'
+  },
+  {
+    expected: 'string',
+    code: 'invalid_type',
+    path: [ 'code' ],
+    message: 'Source code is required'
+  }
+]
+[
+  {
+    expected: 'string',
+    code: 'invalid_type',
+    path: [ 'problemId' ],
+    message: 'Problem is required'
+  },
+  {
+    code: 'invalid_value',
+    values: [ 'python', 'javascript', 'cpp', 'java' ],
+    path: [ 'language' ],
+    message: 'Unsupported programming language'
+  },
+  {
+    expected: 'string',
+    code: 'invalid_type',
+    path: [ 'code' ],
+    message: 'Source code is required'
+  }
+]
+[
+  {
+    expected: 'string',
+    code: 'invalid_type',
+    path: [ 'problemId' ],
+    message: 'Problem is required'
+  },
+  {
+    code: 'invalid_value',
+    values: [ 'python', 'javascript', 'cpp', 'java' ],
+    path: [ 'language' ],
+    message: 'Unsupported programming language'
+  },
+  {
+    expected: 'string',
+    code: 'invalid_type',
+    path: [ 'code' ],
+    message: 'Source code is required'
+  }
+]
+[
+  {
+    expected: 'string',
+    code: 'invalid_type',
+    path: [ 'problemId' ],
+    message: 'Problem is required'
+  },
+  {
+    code: 'invalid_value',
+    values: [ 'python', 'javascript', 'cpp', 'java' ],
+    path: [ 'language' ],
+    message: 'Unsupported programming language'
+  },
+  {
+    expected: 'string',
+    code: 'invalid_type',
+    path: [ 'code' ],
+    message: 'Source code is required'
+  }
+]
+[
+  {
+    expected: 'string',
+    code: 'invalid_type',
+    path: [ 'problemId' ],
+    message: 'Problem is required'
+  },
+  {
+    code: 'invalid_value',
+    values: [ 'python', 'javascript', 'cpp', 'java' ],
+    path: [ 'language' ],
+    message: 'Unsupported programming language'
+  },
+  {
+    expected: 'string',
+    code: 'invalid_type',
+    path: [ 'code' ],
+    message: 'Source code is required'
+  }
+]
+[
+  {
+    expected: 'string',
+    code: 'invalid_type',
+    path: [ 'problemId' ],
+    message: 'Problem is required'
+  },
+  {
+    code: 'invalid_value',
+    values: [ 'python', 'javascript', 'cpp', 'java' ],
+    path: [ 'language' ],
+    message: 'Unsupported programming language'
+  },
+  {
+    expected: 'string',
+    code: 'invalid_type',
+    path: [ 'code' ],
+    message: 'Source code is required'
+  }
+]
+[
+  {
+    expected: 'string',
+    code: 'invalid_type',
+    path: [ 'problemId' ],
+    message: 'Problem is required'
+  },
+  {
+    code: 'invalid_value',
+    values: [ 'python', 'javascript', 'cpp', 'java' ],
+    path: [ 'language' ],
+    message: 'Unsupported programming language'
+  },
+  {
+    expected: 'string',
+    code: 'invalid_type',
+    path: [ 'code' ],
+    message: 'Source code is required'
+  }
+]
+Token verification failed: JsonWebTokenError: jwt malformed
+    at module.exports [as verify] (D:\REPO\MiniCoders\MiniCoders-Server\node_modules\jsonwebtoken\verify.js:70:17)
+    at Object.verifyToken (D:\REPO\MiniCoders\MiniCoders-Server\src\utils\jwt.ts:15:29)
+    at <anonymous> (D:\REPO\MiniCoders\MiniCoders-Server\src\middleware\checkAuth.ts:42:34)
+    at <anonymous> (D:\REPO\MiniCoders\MiniCoders-Server\src\utils\catchAsync.ts:6:10)
+    at Layer.handleRequest (D:\REPO\MiniCoders\MiniCoders-Server\node_modules\router\lib\layer.js:152:17)
+    at next (D:\REPO\MiniCoders\MiniCoders-Server\node_modules\router\lib\route.js:157:13)
+    at Route.dispatch (D:\REPO\MiniCoders\MiniCoders-Server\node_modules\router\lib\route.js:117:3)
+    at handle (D:\REPO\MiniCoders\MiniCoders-Server\node_modules\router\index.js:435:11)
+    at Layer.handleRequest (D:\REPO\MiniCoders\MiniCoders-Server\node_modules\router\lib\layer.js:152:17)
+    at D:\REPO\MiniCoders\MiniCoders-Server\node_modules\router\index.js:295:15
+2:06:10 PM [tsx] change in ./src\modules\submissions\submissions.service.ts Restarting...
+connect to database successfully
+connect to redis successfully
+Server is running on port 5000

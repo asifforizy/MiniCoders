@@ -61,7 +61,7 @@ export default function LearnPage() {
                 href={`/learn/${firstLesson.slug}`}
                 className="inline-flex items-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-lg transition hover:scale-[1.02] hover:bg-primary/90"
               >
-                Start with lesson 1
+                Start learning
                 <ArrowRight className="size-4" />
               </Link>
 

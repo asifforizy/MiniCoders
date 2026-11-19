@@ -25,5 +25,17 @@ export default {
 	smtp_password: process.env.SMTP_PASSWORD!,
 	email_sender: process.env.EMAIL_SENDER!,
     bcrypt_salt_rounds: process.env.BCRYPT_SALT_ROUNDS,
-
+    judge0_api_url: process.env.JUDGE0_API_URL ?? "https://ce.judge0.com",
+    judge0_api_key: process.env.JUDGE0_API_KEY ?? "",
+    judge0_api_host: process.env.JUDGE0_API_HOST ?? "",
+    judge0_language_ids: {
+        python: process.env.JUDGE0_PYTHON_LANGUAGE_ID ?? "71",
+        javascript: process.env.JUDGE0_JAVASCRIPT_LANGUAGE_ID ?? "63",
+        cpp: process.env.JUDGE0_CPP_LANGUAGE_ID ?? "54",
+        java: process.env.JUDGE0_JAVA_LANGUAGE_ID ?? "62",
+    },
+    judge0_poll_timeout_ms: Number(process.env.JUDGE0_POLL_TIMEOUT_MS ?? 45000),
+    judge0_poll_interval_ms: Number(process.env.JUDGE0_POLL_INTERVAL_MS ?? 1000),
+    max_source_code_length: Number(process.env.MAX_SOURCE_CODE_LENGTH ?? 100000),
+    max_custom_input_length: Number(process.env.MAX_CUSTOM_INPUT_LENGTH ?? 10000),
 }

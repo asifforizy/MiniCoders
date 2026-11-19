@@ -8,7 +8,9 @@ import { AuthRoutes } from "./modules/auth/auth.routes";
 import { adminRoutes } from "./modules/admin/admin.route";
 import { kidsRoutes } from "./modules/kids/kids.routes";
 import { problemsRoutes } from "./modules/problems/problems.route";
+import { progressRoutes } from "./modules/progress/progress.routes";
 import { rankingsRoutes } from "./modules/rankings/rankings.route";
+import { submissionsRoutes } from "./modules/submissions/submissions.routes";
 import { superAdminRoutes } from "./modules/super-admin/super-admin.route";
 
 
@@ -16,8 +18,8 @@ import { superAdminRoutes } from "./modules/super-admin/super-admin.route";
 const app: Application = express();
 
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: "1mb" }));
+app.use(express.urlencoded({ extended: true, limit: "1mb" }));
 app.use(cookieParser());
 app.use(
   cors({
@@ -32,6 +34,8 @@ app.use("/api/v1/admin", adminRoutes);
 app.use("/api/v1/super-admin", superAdminRoutes);
 app.use("/api/v1/kids", kidsRoutes);
 app.use("/api/v1/problems", problemsRoutes); 
+app.use("/api/v1/submissions", submissionsRoutes);
+app.use("/api/v1/progress", progressRoutes);
 app.use("/api/v1/rankings", rankingsRoutes);
 
 

@@ -1,0 +1,48 @@
+◇ injected env (15) from .env
+◇ injected env (15) from .env
+(node:14148) Warning: SECURITY WARNING: The SSL modes 'prefer', 'require', and 'verify-ca' are treated as aliases for 'verify-full'.
+In the next major version (pg-connection-string v3.0.0 and pg v9.0.0), these modes will adopt standard libpq semantics, which have weaker security guarantees.
+
+To prepare for this change:
+- If you want the current behavior, explicitly use 'sslmode=verify-full'
+- If you want libpq compatibility now, use 'uselibpqcompat=true&sslmode=require'
+
+See https://www.postgresql.org/docs/current/libpq-ssl.html for libpq SSL mode definitions.
+(Use `node --trace-warnings ...` to show where the warning was created)
+Judge0 error response: 400 {"error":"some attributes for one or more submissions cannot be converted to UTF-8, use base64_encoded=true query parameter"}
+Judge0 batch execution failed, falling back: AppError: The code execution service could not process the request.
+    at judge0Fetch (D:\REPO\MiniCoders\MiniCoders-Server\src\modules\judge0\judge0.service.ts:92:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async pollBatch (D:\REPO\MiniCoders\MiniCoders-Server\src\modules\judge0\judge0.service.ts:235:20)
+    at async Object.executeBatch (D:\REPO\MiniCoders\MiniCoders-Server\src\modules\judge0\judge0.service.ts:367:12)
+    at async Object.evaluateTestCases (D:\REPO\MiniCoders\MiniCoders-Server\src\modules\evaluation\evaluation.service.ts:123:22)
+    at async Object.runProblem (D:\REPO\MiniCoders\MiniCoders-Server\src\modules\submissions\submissions.service.ts:42:22)
+    at async <anonymous> (D:\REPO\MiniCoders\MiniCoders-Server\src\modules\submissions\submissions.controller.ts:15:18)
+    at async <anonymous> (D:\REPO\MiniCoders\MiniCoders-Server\src\utils\catchAsync.ts:6:4) {
+  statusCode: 502
+}
+Judge0 error response: 400 {"error":"some attributes for this submission cannot be converted to UTF-8, use base64_encoded=true query parameter"}
+◇ injected env (15) from .env
+◇ injected env (15) from .env
+◇ injected env (15) from .env
+◇ injected env (15) from .env
+◇ injected env (15) from .env
+(node:7116) Warning: SECURITY WARNING: The SSL modes 'prefer', 'require', and 'verify-ca' are treated as aliases for 'verify-full'.
+In the next major version (pg-connection-string v3.0.0 and pg v9.0.0), these modes will adopt standard libpq semantics, which have weaker security guarantees.
+
+To prepare for this change:
+- If you want the current behavior, explicitly use 'sslmode=verify-full'
+- If you want libpq compatibility now, use 'uselibpqcompat=true&sslmode=require'
+
+See https://www.postgresql.org/docs/current/libpq-ssl.html for libpq SSL mode definitions.
+(Use `node --trace-warnings ...` to show where the warning was created)
+◇ injected env (15) from .env
+(node:24668) Warning: SECURITY WARNING: The SSL modes 'prefer', 'require', and 'verify-ca' are treated as aliases for 'verify-full'.
+In the next major version (pg-connection-string v3.0.0 and pg v9.0.0), these modes will adopt standard libpq semantics, which have weaker security guarantees.
+
+To prepare for this change:
+- If you want the current behavior, explicitly use 'sslmode=verify-full'
+- If you want libpq compatibility now, use 'uselibpqcompat=true&sslmode=require'
+
+See https://www.postgresql.org/docs/current/libpq-ssl.html for libpq SSL mode definitions.
+(Use `node --trace-warnings ...` to show where the warning was created)

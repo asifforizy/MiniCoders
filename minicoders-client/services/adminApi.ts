@@ -3,9 +3,11 @@
 import { cookies } from "next/headers";
 import type {
   AdminProblem,
+  AdminProblemDetail,
   AdminStats,
   AdminUser,
   CreateProblemPayload,
+  UpdateProblemPayload,
   UserStatus,
 } from "@/utils/types";
 
@@ -72,10 +74,26 @@ export async function updateUserStatus(id: string, status: UserStatus) {
   );
 }
 
+export async function getAdminProblem(id: string) {
+  return adminFetch<AdminProblemDetail>(`/problems/${id}`);
+}
+
 export async function createProblem(payload: CreateProblemPayload) {
   return runMutation(() =>
     adminFetch<AdminProblem>("/problems", {
       method: "POST",
+      body: JSON.stringify(payload),
+    })
+  );
+}
+
+export async function updateProblem(
+  id: string,
+  payload: UpdateProblemPayload
+) {
+  return runMutation(() =>
+    adminFetch<AdminProblem>(`/problems/${id}`, {
+      method: "PATCH",
       body: JSON.stringify(payload),
     })
   );

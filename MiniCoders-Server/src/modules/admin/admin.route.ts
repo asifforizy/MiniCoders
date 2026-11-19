@@ -14,7 +14,9 @@ const router = express.Router();
 router.get("/users", auth(Role.ADMIN), adminController.getAllUsers);
 router.patch("/users/:id", auth(Role.ADMIN), adminController.updateUserStatus);
 router.get("/problems", auth(Role.ADMIN), adminController.getAllProblems);
+router.get("/problems/:id", auth(Role.ADMIN), adminController.getProblemById);
 router.post("/problems", auth(Role.ADMIN),  validateRequest(problemValidation.createProblem),adminController.createProblem);
+router.patch("/problems/:id", auth(Role.ADMIN), validateRequest(problemValidation.updateProblem), adminController.updateProblem);
 router.delete("/problems/:id", auth(Role.ADMIN), adminController.deleteProblem);
 router.get("/stats", auth(Role.ADMIN), adminController.getStats);
 
