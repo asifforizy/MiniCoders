@@ -9,6 +9,7 @@ const quickLinks = [
 ]
 
 const learnLinks = [
+    { label: 'Python Basics', href: '/learn' },
     { label: 'Problems', href: '/problems' },
     { label: 'Dashboard', href: '/dashboard' },
     { label: 'Profile', href: '/profile' },
