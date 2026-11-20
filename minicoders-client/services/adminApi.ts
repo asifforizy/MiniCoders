@@ -4,12 +4,30 @@ import { cookies } from "next/headers";
 import type {
   AdminProblem,
   AdminProblemDetail,
+  AdminProblemsData,
+  AdminProblemsQuery,
   AdminStats,
   AdminUser,
+  AdminUsersData,
+  AdminUsersQuery,
   CreateProblemPayload,
   UpdateProblemPayload,
   UserStatus,
 } from "@/utils/types";
+
+function toQueryString(params: Record<string, string | undefined>) {
+  const qs = new URLSearchParams();
+
+  Object.entries(params).forEach(([key, value]) => {
+    if (typeof value === "string" && value.trim()) {
+      qs.set(key, value);
+    }
+  });
+
+  const query = qs.toString();
+
+  return query ? `?${query}` : "";
+}
 
 async function adminFetch<T>(path: string, init?: RequestInit): Promise<T> {
   const accessToken = (await cookies()).get("accessToken")?.value;
@@ -57,12 +75,12 @@ export async function getAdminStats() {
   return adminFetch<AdminStats>("/stats");
 }
 
-export async function getAdminUsers() {
-  return adminFetch<AdminUser[]>("/users");
+export async function getAdminUsers(query: AdminUsersQuery = {}) {
+  return adminFetch<AdminUsersData>(`/users${toQueryString(query)}`);
 }
 
-export async function getAdminProblems() {
-  return adminFetch<AdminProblem[]>("/problems");
+export async function getAdminProblems(query: AdminProblemsQuery = {}) {
+  return adminFetch<AdminProblemsData>(`/problems${toQueryString(query)}`);
 }
 
 export async function updateUserStatus(id: string, status: UserStatus) {

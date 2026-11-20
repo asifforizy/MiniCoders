@@ -3,8 +3,6 @@ import { Suspense } from "react";
 import { StatCards } from "@/components/admin/dashboard/stat-cards";
 import { RegistrationLineChart } from "@/components/charts/registration-line-chart";
 import { RolePieChart } from "@/components/charts/role-pie-chart";
-import { UserStatusManagement } from "@/components/admin/dashboard/user-status-management";
-import { ProblemManagement } from "@/components/admin/dashboard/problem-management";
 import {
   Card,
   CardContent,
@@ -12,18 +10,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  getAdminProblems,
-  getAdminStats,
-  getAdminUsers,
-} from "@/services/adminApi";
-import type { AdminProblem, AdminStats, AdminUser } from "@/utils/types";
-
-type DashboardData = {
-  stats: AdminStats;
-  users: AdminUser[];
-  problems: AdminProblem[];
-};
+import { getAdminStats } from "@/services/adminApi";
+import type { AdminStats } from "@/utils/types";
 
 export default function AdminDashboardPage() {
   return (
@@ -34,17 +22,17 @@ export default function AdminDashboardPage() {
 }
 
 async function AdminDashboardContent() {
-  let data: DashboardData | null = null;
+  let stats: AdminStats | null = null;
   let errorMessage = "Something went wrong while loading dashboard data.";
 
   try {
-    data = await loadDashboardData();
+    stats = await getAdminStats();
   } catch (error) {
     errorMessage =
       error instanceof Error ? error.message : "Unable to load admin data.";
   }
 
-  if (!data) {
+  if (!stats) {
     return (
       <main className="min-h-screen bg-background px-4 py-12 text-foreground sm:px-6">
         <div className="mx-auto max-w-xl">
@@ -65,8 +53,6 @@ async function AdminDashboardContent() {
     );
   }
 
-  const { stats, users, problems } = data;
-
   return (
     <main className="min-h-screen bg-background px-4 py-8 text-foreground sm:px-6">
       <div className="mx-auto max-w-7xl space-y-6">
@@ -75,7 +61,7 @@ async function AdminDashboardContent() {
             Admin dashboard
           </h1>
           <p className="text-sm text-muted-foreground">
-            Monitor the platform, manage user accounts, and publish problems.
+            Monitor the platform. Select a card to manage users or problems.
           </p>
         </header>
 
@@ -85,23 +71,9 @@ async function AdminDashboardContent() {
           <RegistrationLineChart data={stats.registrations} />
           <RolePieChart data={stats.roles} />
         </div>
-
-        <UserStatusManagement users={users} />
-
-        <ProblemManagement problems={problems} />
       </div>
     </main>
   );
-}
-
-async function loadDashboardData(): Promise<DashboardData> {
-  const [stats, users, problems] = await Promise.all([
-    getAdminStats(),
-    getAdminUsers(),
-    getAdminProblems(),
-  ]);
-
-  return { stats, users, problems };
 }
 
 function DashboardSkeleton() {
@@ -126,9 +98,6 @@ function DashboardSkeleton() {
           <div className="h-80 animate-pulse rounded-xl bg-muted/60" />
           <div className="h-80 animate-pulse rounded-xl bg-muted/60" />
         </div>
-
-        <div className="h-96 animate-pulse rounded-xl bg-muted/60" />
-        <div className="h-96 animate-pulse rounded-xl bg-muted/60" />
       </div>
     </main>
   );

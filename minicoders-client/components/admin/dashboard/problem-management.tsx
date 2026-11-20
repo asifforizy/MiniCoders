@@ -3,7 +3,7 @@
 import { useState } from "react";
 import type { FormEvent } from "react";
 import { useRouter } from "next/navigation";
-import { Pencil, Plus, Trash2, X } from "lucide-react";
+import { ArrowLeft, Pencil, Plus, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -14,6 +14,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Spinner } from "@/components/ui/spinner";
@@ -34,6 +42,7 @@ import type {
 
 type ProblemManagementProps = {
   problems: AdminProblem[];
+  total: number;
 };
 
 type FormTestCase = {
@@ -115,14 +124,16 @@ const optionalNumber = (value: string): number | undefined => {
 const optionalText = (value: string): string | undefined =>
   value.trim() ? value.trim() : undefined;
 
-export function ProblemManagement({ problems }: ProblemManagementProps) {
+export function ProblemManagement({ problems, total }: ProblemManagementProps) {
   const router = useRouter();
 
   const [form, setForm] = useState<ProblemFormState>(emptyForm);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [isFormOpen, setIsFormOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [loadingEditId, setLoadingEditId] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [pendingDelete, setPendingDelete] = useState<AdminProblem | null>(null);
 
   const setField = <K extends keyof ProblemFormState>(
     key: K,
@@ -162,6 +173,16 @@ export function ProblemManagement({ problems }: ProblemManagementProps) {
   const resetForm = () => {
     setForm(emptyForm());
     setEditingId(null);
+  };
+
+  const handleFormOpenChange = (open: boolean) => {
+    setIsFormOpen(open);
+    if (!open) resetForm();
+  };
+
+  const openCreateForm = () => {
+    resetForm();
+    setIsFormOpen(true);
   };
 
   const buildPayload = (): CreateProblemPayload | null => {
@@ -241,7 +262,7 @@ export function ProblemManagement({ problems }: ProblemManagementProps) {
     toast.success(
       editingId ? "Problem updated successfully" : "Problem created successfully"
     );
-    resetForm();
+    handleFormOpenChange(false);
     router.refresh();
   };
 
@@ -282,7 +303,7 @@ export function ProblemManagement({ problems }: ProblemManagementProps) {
             : [emptyTestCase(true)],
       });
 
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      setIsFormOpen(true);
     } catch (error) {
       toast.error(
         error instanceof Error ? error.message : "Failed to load problem"
@@ -292,10 +313,10 @@ export function ProblemManagement({ problems }: ProblemManagementProps) {
     }
   };
 
-  const handleDelete = async (problem: AdminProblem) => {
-    if (!window.confirm(`Delete "${problem.title}"? This cannot be undone.`)) {
-      return;
-    }
+  const handleDelete = async () => {
+    if (!pendingDelete) return;
+
+    const problem = pendingDelete;
 
     setDeletingId(problem.id);
 
@@ -309,19 +330,26 @@ export function ProblemManagement({ problems }: ProblemManagementProps) {
     }
 
     toast.success("Problem deleted successfully");
-    if (editingId === problem.id) resetForm();
+    setPendingDelete(null);
+    if (editingId === problem.id) handleFormOpenChange(false);
     router.refresh();
   };
 
   return (
-    <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_460px]">
+    <div className="space-y-4">
       <Card>
-        <CardHeader>
-          <CardTitle>Problem management</CardTitle>
-          <CardDescription>
-            {problems.length} problem{problems.length === 1 ? "" : "s"} in the
-            platform.
-          </CardDescription>
+        <CardHeader className="flex flex-row flex-wrap items-start justify-between gap-3">
+          <div className="space-y-1">
+            <CardTitle>Problems</CardTitle>
+            <CardDescription>
+              {total} problem{total === 1 ? "" : "s"} match the current filters.
+            </CardDescription>
+          </div>
+
+          <Button type="button" onClick={openCreateForm}>
+            <Plus className="size-4" />
+            Add problem
+          </Button>
         </CardHeader>
 
         <CardContent>
@@ -423,7 +451,7 @@ export function ProblemManagement({ problems }: ProblemManagementProps) {
                             variant="destructive"
                             size="sm"
                             disabled={deletingId === problem.id}
-                            onClick={() => handleDelete(problem)}
+                            onClick={() => setPendingDelete(problem)}
                           >
                             {deletingId === problem.id ? (
                               <Spinner className="size-3.5" />
@@ -443,34 +471,19 @@ export function ProblemManagement({ problems }: ProblemManagementProps) {
         </CardContent>
       </Card>
 
-      <Card className="h-fit">
-        <CardHeader>
-          <div className="flex items-start justify-between gap-2">
-            <div>
-              <CardTitle>
-                {editingId ? "Edit problem" : "Create a problem"}
-              </CardTitle>
-              <CardDescription>
-                {editingId
-                  ? "Update the statement, limits, starter code, and test cases."
-                  : "Add a new coding challenge with starter code and test cases."}
-              </CardDescription>
-            </div>
-            {editingId ? (
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon-sm"
-                onClick={resetForm}
-                aria-label="Cancel editing"
-              >
-                <X />
-              </Button>
-            ) : null}
-          </div>
-        </CardHeader>
+      <Dialog open={isFormOpen} onOpenChange={handleFormOpenChange}>
+        <DialogContent className="max-w-3xl">
+          <DialogHeader>
+            <DialogTitle>
+              {editingId ? "Edit problem" : "Create a problem"}
+            </DialogTitle>
+            <DialogDescription>
+              {editingId
+                ? `Editing "${form.title || "problem"}". Update the statement, limits, starter code, and test cases.`
+                : "Add a new coding challenge with starter code and test cases."}
+            </DialogDescription>
+          </DialogHeader>
 
-        <CardContent>
           <form onSubmit={handleSubmit} className="space-y-3">
             <div className="space-y-1.5">
               <Label htmlFor="problem-title">Title</Label>
@@ -757,35 +770,76 @@ export function ProblemManagement({ problems }: ProblemManagementProps) {
               ))}
             </div>
 
-            <Button type="submit" className="w-full" disabled={isSaving}>
-              {isSaving ? (
-                <Spinner className="size-4" />
-              ) : editingId ? (
-                <Pencil className="size-4" />
-              ) : (
-                <Plus className="size-4" />
-              )}
-              {isSaving
-                ? "Saving..."
-                : editingId
-                  ? "Save changes"
-                  : "Create problem"}
-            </Button>
-
-            {editingId ? (
+            <DialogFooter className="flex-row items-center justify-between">
               <Button
                 type="button"
-                variant="outline"
-                className="w-full"
-                onClick={resetForm}
+                variant="ghost"
+                onClick={() => handleFormOpenChange(false)}
                 disabled={isSaving}
               >
-                Cancel editing
+                <ArrowLeft className="size-4" />
+                Back
               </Button>
-            ) : null}
+              <Button type="submit" disabled={isSaving}>
+                {isSaving ? (
+                  <Spinner className="size-4" />
+                ) : editingId ? (
+                  <Pencil className="size-4" />
+                ) : (
+                  <Plus className="size-4" />
+                )}
+                {isSaving
+                  ? "Saving..."
+                  : editingId
+                    ? "Save changes"
+                    : "Create problem"}
+              </Button>
+            </DialogFooter>
           </form>
-        </CardContent>
-      </Card>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog
+        open={Boolean(pendingDelete)}
+        onOpenChange={(open) => {
+          if (!open) setPendingDelete(null);
+        }}
+      >
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Delete problem?</DialogTitle>
+            <DialogDescription>
+              {pendingDelete
+                ? `"${pendingDelete.title}" will be permanently deleted. This cannot be undone.`
+                : ""}
+            </DialogDescription>
+          </DialogHeader>
+
+          <DialogFooter className="flex-row items-center justify-end">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setPendingDelete(null)}
+              disabled={Boolean(deletingId)}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="button"
+              variant="destructive"
+              onClick={handleDelete}
+              disabled={Boolean(deletingId)}
+            >
+              {deletingId ? (
+                <Spinner className="size-4" />
+              ) : (
+                <Trash2 className="size-4" />
+              )}
+              Delete
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

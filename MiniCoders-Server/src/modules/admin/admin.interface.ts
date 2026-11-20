@@ -33,3 +33,19 @@ export type TCreateProblemPayload = {
 };
 
 export type TUpdateProblemPayload = Partial<TCreateProblemPayload>;
+
+export type TAdminUserQuery = {
+  search?: string;
+  role?: string;
+  status?: string;
+  page?: string;
+  limit?: string;
+};
+
+export type TAdminProblemQuery = {
+  search?: string;
+  difficulty?: string;
+  published?: string;
+  page?: string;
+  limit?: string;
+};

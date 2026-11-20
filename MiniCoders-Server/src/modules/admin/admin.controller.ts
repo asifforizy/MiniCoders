@@ -5,13 +5,20 @@ import httpStatus from 'http-status';
 import { adminService } from "./admin.service";
 
 const getAllUsers = catchAsync(async (req: Request, res: Response) => {
-  const result = await adminService.getAllUsersFromDB();
+  const result = await adminService.getAllUsersFromDB({
+    search: req.query.search as string | undefined,
+    role: req.query.role as string | undefined,
+    status: req.query.status as string | undefined,
+    page: req.query.page as string | undefined,
+    limit: req.query.limit as string | undefined,
+  });
 
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
     message: "Users retrieved successfully",
     data: result,
+    meta: result.meta,
   });
 });
 
@@ -45,13 +52,20 @@ const getStats = catchAsync(async (req: Request, res: Response) => {
 
 
 const getAllProblems = catchAsync(async (req: Request, res: Response) => {
-  const result = await adminService.getAllProblemsFromDB();
+  const result = await adminService.getAllProblemsFromDB({
+    search: req.query.search as string | undefined,
+    difficulty: req.query.difficulty as string | undefined,
+    published: req.query.published as string | undefined,
+    page: req.query.page as string | undefined,
+    limit: req.query.limit as string | undefined,
+  });
 
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
     message: "ALL Problems retrieved successfully",
     data: result,
+    meta: result.meta,
   });
 });
 

@@ -362,3 +362,36 @@ export type CreateProblemPayload = {
 };
 
 export type UpdateProblemPayload = Partial<CreateProblemPayload>;
+
+export type AdminPaginationMeta = {
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+};
+
+export type AdminUsersQuery = {
+  search?: string;
+  role?: string;
+  status?: string;
+  page?: string;
+  limit?: string;
+};
+
+export type AdminProblemsQuery = {
+  search?: string;
+  difficulty?: string;
+  published?: string;
+  page?: string;
+  limit?: string;
+};
+
+export type AdminUsersData = {
+  users: AdminUser[];
+  meta: AdminPaginationMeta;
+};
+
+export type AdminProblemsData = {
+  problems: AdminProblem[];
+  meta: AdminPaginationMeta;
+};

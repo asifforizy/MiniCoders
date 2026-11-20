@@ -1,8 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Search } from "lucide-react";
 import { toast } from "sonner";
 
 import {
@@ -12,7 +11,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import { updateUserStatus } from "@/services/adminApi";
 import type { AdminUser, UserRole, UserStatus } from "@/utils/types";
@@ -44,28 +42,15 @@ function roleLabel(role: UserRole) {
 export function UserStatusManagement({ users }: UserStatusManagementProps) {
   const router = useRouter();
 
-  const [query, setQuery] = useState("");
-  const [statusFilter, setStatusFilter] = useState<"ALL" | UserStatus>("ALL");
   const [pendingId, setPendingId] = useState<string | null>(null);
-
-  const filteredUsers = useMemo(() => {
-    const term = query.trim().toLowerCase();
-
-    return users.filter((user) => {
-      const matchesTerm =
-        !term ||
-        user.name.toLowerCase().includes(term) ||
-        user.email.toLowerCase().includes(term);
-
-      const matchesStatus =
-        statusFilter === "ALL" || user.status === statusFilter;
-
-      return matchesTerm && matchesStatus;
-    });
-  }, [users, query, statusFilter]);
 
   const handleStatusChange = async (user: AdminUser, status: UserStatus) => {
     if (status === user.status) return;
+
+    if (user.role === "ADMIN" || user.role === "SUPER_ADMIN") {
+      toast.error("Admin and super admin accounts cannot be blocked or deleted");
+      return;
+    }
 
     setPendingId(user.id);
 
@@ -91,33 +76,7 @@ export function UserStatusManagement({ users }: UserStatusManagementProps) {
         </CardDescription>
       </CardHeader>
 
-      <CardContent className="space-y-4">
-        <div className="flex flex-col gap-2 sm:flex-row">
-          <div className="relative flex-1">
-            <Search className="pointer-events-none absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-            <Input
-              value={query}
-              onChange={(event) => setQuery(event.target.value)}
-              placeholder="Search by name or email"
-              className="pl-8"
-            />
-          </div>
-
-          <select
-            value={statusFilter}
-            onChange={(event) =>
-              setStatusFilter(event.target.value as "ALL" | UserStatus)
-            }
-            aria-label="Filter users by status"
-            className="h-8 rounded-lg border border-input bg-transparent px-2.5 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 dark:bg-input/30"
-          >
-            <option value="ALL">All statuses</option>
-            <option value="ACTIVE">Active</option>
-            <option value="BLOCKED">Blocked</option>
-            <option value="DELETED">Deleted</option>
-          </select>
-        </div>
-
+      <CardContent>
         <div className="overflow-x-auto rounded-lg border border-border">
           <table className="w-full min-w-[760px] text-sm">
             <thead>
@@ -131,7 +90,7 @@ export function UserStatusManagement({ users }: UserStatusManagementProps) {
             </thead>
 
             <tbody>
-              {filteredUsers.length === 0 ? (
+              {users.length === 0 ? (
                 <tr>
                   <td
                     colSpan={5}
@@ -141,7 +100,7 @@ export function UserStatusManagement({ users }: UserStatusManagementProps) {
                   </td>
                 </tr>
               ) : (
-                filteredUsers.map((user) => (
+                users.map((user) => (
                   <tr
                     key={user.id}
                     className="border-b border-border last:border-0"
@@ -175,22 +134,33 @@ export function UserStatusManagement({ users }: UserStatusManagementProps) {
                           <Spinner className="size-3.5 text-muted-foreground" />
                         )}
 
-                        <select
-                          value={user.status}
-                          disabled={pendingId === user.id}
-                          onChange={(event) =>
-                            handleStatusChange(
-                              user,
-                              event.target.value as UserStatus
-                            )
-                          }
-                          aria-label={`Status for ${user.name}`}
-                          className={`h-8 rounded-lg border border-input bg-transparent px-2 text-xs font-medium outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:opacity-50 dark:bg-input/30 ${statusClasses[user.status]}`}
-                        >
-                          <option value="ACTIVE">Active</option>
-                          <option value="BLOCKED">Blocked</option>
-                          <option value="DELETED">Deleted</option>
-                        </select>
+                        {user.role === "ADMIN" ||
+                        user.role === "SUPER_ADMIN" ? (
+                          <span
+                            title="Admin and super admin accounts cannot be blocked, banned, or deleted"
+                            className={`inline-flex h-8 items-center rounded-lg border border-input px-2 text-xs font-medium ${statusClasses[user.status]}`}
+                          >
+                            {user.status.charAt(0) +
+                              user.status.slice(1).toLowerCase()}
+                          </span>
+                        ) : (
+                          <select
+                            value={user.status}
+                            disabled={pendingId === user.id}
+                            onChange={(event) =>
+                              handleStatusChange(
+                                user,
+                                event.target.value as UserStatus
+                              )
+                            }
+                            aria-label={`Status for ${user.name}`}
+                            className={`h-8 rounded-lg border border-input bg-transparent px-2 text-xs font-medium outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:opacity-50 dark:bg-input/30 ${statusClasses[user.status]}`}
+                          >
+                            <option value="ACTIVE">Active</option>
+                            <option value="BLOCKED">Blocked</option>
+                            <option value="DELETED">Deleted</option>
+                          </select>
+                        )}
                       </div>
                     </td>
                   </tr>

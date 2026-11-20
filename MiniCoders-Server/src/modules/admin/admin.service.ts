@@ -1,20 +1,74 @@
-import { Prisma, Role } from "../../../prisma/generated/prisma/client";
+import { Prisma, Role, UserStatus, Difficulty } from "../../../prisma/generated/prisma/client";
 import { prisma } from "../../lib/prisma";
 import { AppError } from "../../utils/AppError";
 import { slugify } from "../../utils/generateSlug";
 import {
   IUpdatedStatus,
+  TAdminProblemQuery,
+  TAdminUserQuery,
   TAdminTestCasePayload,
   TCreateProblemPayload,
   TUpdateProblemPayload,
 } from "./admin.interface";
 import httpStatus from 'http-status';
 
-const getAllUsersFromDB = async () => {
-  return prisma.user.findMany({
-    omit: { password: true },
-    orderBy: { createdAt: "desc" },
-  });
+const parsePagination = (pageValue?: string, limitValue?: string) => {
+  const page = Math.max(parseInt(pageValue ?? "1", 10) || 1, 1);
+  const limit = Math.min(
+    Math.max(parseInt(limitValue ?? "20", 10) || 20, 1),
+    100
+  );
+
+  return { page, limit, skip: (page - 1) * limit };
+};
+
+const getAllUsersFromDB = async (query: TAdminUserQuery = {}) => {
+  const { page, limit, skip } = parsePagination(query.page, query.limit);
+  const term = query.search?.trim();
+
+  const roles = (query.role ?? "")
+    .split(",")
+    .map((value) => value.trim())
+    .filter((value): value is Role =>
+      Object.values(Role).includes(value as Role)
+    );
+
+  const status =
+    query.status && Object.values(UserStatus).includes(query.status as UserStatus)
+      ? (query.status as UserStatus)
+      : undefined;
+
+  const where: Prisma.UserWhereInput = {
+    ...(roles.length > 0 && { role: { in: roles } }),
+    ...(status && { status }),
+    ...(term && {
+      OR: [
+        { name: { contains: term, mode: "insensitive" as const } },
+        { email: { contains: term, mode: "insensitive" as const } },
+      ],
+    }),
+  };
+
+  const [users, total] = await Promise.all([
+    prisma.user.findMany({
+      where,
+      omit: { password: true },
+      orderBy: { createdAt: "desc" },
+      skip,
+      take: limit,
+    }),
+    prisma.user.count({ where }),
+  ]);
+
+  return {
+    users,
+    meta: {
+      page,
+      limit,
+      total,
+      totalPages: Math.ceil(total / limit),
+    },
+  };
 };
 
 const updateUserStatusIntoDB = async (id: string, payload: IUpdatedStatus) => {
@@ -26,6 +80,13 @@ const updateUserStatusIntoDB = async (id: string, payload: IUpdatedStatus) => {
 
   if (!user) {
     throw new Error("User not found");
+  }
+
+  if (user.role === Role.ADMIN || user.role === Role.SUPER_ADMIN) {
+    throw new AppError(
+      httpStatus.FORBIDDEN,
+      "Admin and super admin accounts cannot be blocked, banned, or deleted"
+    );
   }
 
   const updatedUser = await prisma.user.update({
@@ -92,27 +153,69 @@ const getStatsFromDB = async () => {
   };
 };
 
-const getAllProblemsFromDB = async () => {
-  const allProblems = await prisma.problem.findMany({
-    include: {
-      author: {
-        select: {
-          id: true,
-          name: true,
-          email: true,
-        },
-      },
-      _count: {
-        select: {
-          submissions: true,
-          testCases: true,
-        },
-      },
-    },
-    orderBy: { createdAt: "desc" },
-  });
+const getAllProblemsFromDB = async (query: TAdminProblemQuery = {}) => {
+  const { page, limit, skip } = parsePagination(query.page, query.limit);
+  const term = query.search?.trim();
 
-  return allProblems;
+  const difficulty =
+    query.difficulty &&
+    Object.values(Difficulty).includes(query.difficulty as Difficulty)
+      ? (query.difficulty as Difficulty)
+      : undefined;
+
+  const published =
+    query.published === "true"
+      ? true
+      : query.published === "false"
+        ? false
+        : undefined;
+
+  const where: Prisma.ProblemWhereInput = {
+    ...(difficulty && { difficulty }),
+    ...(published !== undefined && { isPublished: published }),
+    ...(term && {
+      OR: [
+        { title: { contains: term, mode: "insensitive" as const } },
+        { description: { contains: term, mode: "insensitive" as const } },
+        { topic: { contains: term, mode: "insensitive" as const } },
+      ],
+    }),
+  };
+
+  const [problems, total] = await Promise.all([
+    prisma.problem.findMany({
+      where,
+      include: {
+        author: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
+        _count: {
+          select: {
+            submissions: true,
+            testCases: true,
+          },
+        },
+      },
+      orderBy: { createdAt: "desc" },
+      skip,
+      take: limit,
+    }),
+    prisma.problem.count({ where }),
+  ]);
+
+  return {
+    problems,
+    meta: {
+      page,
+      limit,
+      total,
+      totalPages: Math.ceil(total / limit),
+    },
+  };
 };
 
 const getProblemByIdFromDB = async (problemId: string) => {
